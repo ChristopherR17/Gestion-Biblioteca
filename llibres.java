@@ -1,4 +1,3 @@
-package gestio_biblioteca.src.main.java.com.biblioteca;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
