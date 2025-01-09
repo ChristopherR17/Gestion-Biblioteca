@@ -38,14 +38,17 @@ public class Main {
             System.out.println("Escull una opció");
             String option = scanner.nextLine().toLowerCase();
 
-            switch (option) {
-                case "llibres":
-                    int optionBooks = scanner.nextInt();
-                    break;
-                default:
-                    break;
+            if (option.equals("llibres") || option.equals("1")){
+                //En menubooks llamar funciones de modificar... así para todos los métodos
+                menuBooks();
+                break;
+            } else if (option.equals("usuaris") || option.equals("2")){
+                break;
+            } else if (option.equals("préstecs") || option.equals("3")){
+                break;
+            } else if (option.equals("sortir") || option.equals("0")){
+                break;
             }
-
         }
 
         scanner.close();
