@@ -1,5 +1,12 @@
 package com.biblioteca;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
+
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class functions {
     //Funciones de estetica de menu
@@ -84,6 +91,7 @@ public class functions {
         String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
             if (optionPrestecs.equals("afegir") || optionPrestecs.equals("1")){
+                addBook(scanner);
                 break;
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
                 break;
@@ -122,6 +130,40 @@ public class functions {
                 break;
             }
 
+        }
+    }
+
+    public static void addBook (Scanner scanner){
+        try {
+            String filePath = "../JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            JSONArray llibresArray = new JSONArray(content);
+
+            System.out.println("Introdueix l'ID del llibre: ");
+            int id = scanner.nextInt();
+
+            System.out.println("Introdueix el titol del llibre: ");
+            String titol = scanner.nextLine();
+
+            System.out.println("Introduiex l'autor del llibre: ");
+            String autor = scanner.nextLine();
+
+            JSONObject nouLlibre = new JSONObject();
+            nouLlibre.put("id", id);
+            nouLlibre.put("titol", titol);
+            nouLlibre.put("autor", autor);
+
+            llibresArray.put(nouLlibre);
+            
+            Files.write(Paths.get(filePath), llibresArray.toString(4).getBytes());
+
+            System.out.println("Llibre afegit correctament.");
+
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al procesar el JSON: " + e.getMessage());
         }
     }
 }
