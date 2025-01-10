@@ -144,6 +144,20 @@ public class functions {
             int id = scanner.nextInt();
             scanner.nextLine();
 
+            boolean idExists = false;
+            for (int i = 0; i < llibresArray.length(); i++) {
+                JSONObject llibre = llibresArray.getJSONObject(i);
+                if (llibre.getInt("id") == id){
+                    idExists = true;
+                    break;
+                }
+            }
+
+            if (idExists){
+                System.out.println("Error: L'ID ja existeix. Introdueix una ID única.");
+                return;
+            }
+
             System.out.println("Introdueix el titol del llibre: ");
             String titol = scanner.nextLine();
 
