@@ -8,5 +8,15 @@
         "titol": "Un monstruo viene a verme",
         "id": 2,
         "autor": "Patrick"
+    },
+    {
+        "titol": "Bajo el agua",
+        "id": 3,
+        "autor": "Paula Hawkins"
+    },
+    {
+        "titol": "2",
+        "id": 5,
+        "autor": "3"
     }
 ]

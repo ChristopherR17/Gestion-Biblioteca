@@ -11,7 +11,8 @@ import org.json.JSONException;
 public class functions {
     //Funciones de estetica de menu
     public static void menu (){
-        System.err.println("Gestió de bilioteca");
+        System.out.println("==========================");
+        System.out.println("Gestió de bilioteca");
         System.out.println("1. Llibres");
         System.err.println("2. Usuaris");
         System.out.println("3. Préstecs");
@@ -19,6 +20,7 @@ public class functions {
     }
     
     public static void menuBooks (Scanner scanner){
+        System.out.println("==========================");
         System.out.println("Gestió de llibres");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -51,6 +53,7 @@ public class functions {
     }
 
     public static void menUsers(Scanner scanner){
+        System.out.println("==========================");
         System.out.println("Gestió d'usuaris");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -82,6 +85,7 @@ public class functions {
     }
 
     public static void menuPrestecs(Scanner scanner){
+        System.out.println("==========================");
         System.out.println("Gestió dels préstecs");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -109,6 +113,7 @@ public class functions {
     }
 
     public static void menuListBooks (Scanner scanner){
+        System.out.println("==========================");
         System.out.println("Llistar llibres");
         System.out.println("1. Tots");
         System.out.println("2. En préstec");
@@ -141,9 +146,22 @@ public class functions {
 
             JSONArray llibresArray = new JSONArray(content);
 
-            System.out.println("Introdueix l'ID del llibre: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
+            int id;
+            while (true) {
+                System.out.println("===========================");
+                System.out.println("Introdueix l'ID del llibre: ");
+                String idInput = scanner.nextLine().trim();
+                if (idInput.isEmpty()) {
+                    System.out.println("Error: L'ID no pot estar buit. Introdueix un valor vàlid.");
+                    continue; 
+                }
+                try {
+                    id = Integer.parseInt(idInput); 
+                    break; 
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: L'ID ha de ser un número. Introdueix un valor vàlid.");
+                }
+            }
 
             boolean idExists = false;
             for (int i = 0; i < llibresArray.length(); i++) {
@@ -159,8 +177,17 @@ public class functions {
                 return;
             }
 
-            System.out.println("Introdueix el titol del llibre: ");
-            String titol = scanner.nextLine();
+            String titol;
+            while(true){
+                System.out.println("Introdueix el titol del llibre: ");
+                titol = scanner.nextLine();
+                
+                if (titol.isEmpty()){
+                    System.out.println("Error: El títol no pot estar buit. Introduiex un valor vàlid.");
+                } else {
+                    break;
+                }
+            }
 
             System.out.println("Introduiex l'autor del llibre: ");
             String autor = scanner.nextLine();
@@ -175,6 +202,25 @@ public class functions {
             Files.write(Paths.get(filePath), llibresArray.toString(4).getBytes());
 
             System.out.println("Llibre afegit correctament.");
+
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al procesar el JSON: " + e.getMessage());
+        }
+    }
+
+    public static void modifyBook(Scanner scanner){
+        try {
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            JSONArray llibresArray = new JSONArray(content);
+
+            System.out.println("Introdueix l'ID del llibre que vols modificar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
 
         } catch (IOException e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
