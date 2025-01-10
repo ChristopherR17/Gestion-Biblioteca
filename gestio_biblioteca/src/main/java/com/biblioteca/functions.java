@@ -139,6 +139,10 @@ public class functions {
         }
     }
 
+    /*
+     * Estas son las funciones que sirven para añadir, modificar y eliminar libros.
+     */
+
     public static void addBook (Scanner scanner){
         try {
             String filePath = "./JSON/llibres.json";
