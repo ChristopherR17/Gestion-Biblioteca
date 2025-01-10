@@ -10,7 +10,7 @@ public class Main {
         //HACER EL BUCLE PRINCIPAL EN UNA FUNCION ? 
         while (true) {
             functions.menu();
-            System.out.println("Escull una opció");
+            System.out.println("Escull una opció: ");
             String option = scanner.nextLine().toLowerCase();
 
             if (option.equals("llibres") || option.equals("1")){

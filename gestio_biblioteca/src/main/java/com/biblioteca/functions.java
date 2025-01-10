@@ -29,6 +29,7 @@ public class functions {
         String optionBooks = scanner.nextLine().toLowerCase();
         while (true) {
             if (optionBooks.equals("afegir") || optionBooks.equals("1")){
+                addBook(scanner);
                 break;
 
             } else if (optionBooks.equals("modificar") || optionBooks.equals("2")){
@@ -135,13 +136,28 @@ public class functions {
 
     public static void addBook (Scanner scanner){
         try {
-            String filePath = "../JSON/llibres.json";
+            String filePath = "./JSON/llibres.json";
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
 
             JSONArray llibresArray = new JSONArray(content);
 
             System.out.println("Introdueix l'ID del llibre: ");
             int id = scanner.nextInt();
+            scanner.nextLine();
+
+            boolean idExists = false;
+            for (int i = 0; i < llibresArray.length(); i++) {
+                JSONObject llibre = llibresArray.getJSONObject(i);
+                if (llibre.getInt("id") == id){
+                    idExists = true;
+                    break;
+                }
+            }
+
+            if (idExists){
+                System.out.println("Error: L'ID ja existeix. Introdueix una ID única.");
+                return;
+            }
 
             System.out.println("Introdueix el titol del llibre: ");
             String titol = scanner.nextLine();

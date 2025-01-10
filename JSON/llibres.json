@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "titol": "La guerra de los mundos",
+        "id": 1,
+        "autor": "H. G. Orwell"
+    },
+    {
+        "titol": "Un monstruo viene a verme",
+        "id": 2,
+        "autor": "Patrick"
+    }
+]
