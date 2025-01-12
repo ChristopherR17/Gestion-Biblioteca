@@ -35,6 +35,7 @@ public class functions {
                 break;
 
             } else if (optionBooks.equals("modificar") || optionBooks.equals("2")){
+                modifyBook(scanner);
                 break;
 
             } else if (optionBooks.equals("eliminar") || optionBooks.equals("3")){
@@ -96,7 +97,6 @@ public class functions {
         String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
             if (optionPrestecs.equals("afegir") || optionPrestecs.equals("1")){
-                addBook(scanner);
                 break;
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
                 break;
@@ -208,7 +208,7 @@ public class functions {
             System.out.println("Llibre afegit correctament.");
 
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {
             System.out.println("Error al procesar el JSON: " + e.getMessage());
         }
@@ -225,11 +225,43 @@ public class functions {
             int id = scanner.nextInt();
             scanner.nextLine();
 
+            JSONObject llibreModificar = null;
+            for (int i = 0; i < llibresArray.length(); i++) {
+                JSONObject llibre = llibresArray.getJSONObject(i);
+                if (llibre.getInt("id") == id){
+                    llibreModificar = llibre;
+                    break;
+                }
+            }
+
+            if (llibreModificar == null){
+                System.out.println("Error: No s'ha trobat cap llibre amb aquesta ID.");
+                return;
+            }
+
+            System.out.println("Llibre trobat: ");
+            System.out.println("ID: " + llibreModificar.getInt("id"));
+            System.out.println("Títol: " + llibreModificar.getString("titol"));
+            System.out.println("Autor: " + llibreModificar.getString("autor"));
+
+            System.out.println("Introdueix el nou títol del llibre (deixa'l buit per mantenir el títol actual):");
+            String nouTitol = scanner.nextLine().trim();
+            if (!nouTitol.isEmpty()){
+                llibreModificar.put("titol", nouTitol);
+            }
+
+            System.out.println("Introdueix el nou autor del llibre (deixa'l buit per mantenir l'autor actual):");
+            String nouAutor = scanner.nextLine().trim();
+            if (!nouAutor.isEmpty()){
+                llibreModificar.put("autor", nouAutor);
+            }
+
+            Files.write(Paths.get(filePath), llibresArray.toString(4).getBytes());
 
         } catch (IOException e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {
-            System.out.println("Error al procesar el JSON: " + e.getMessage());
+            System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
 }
