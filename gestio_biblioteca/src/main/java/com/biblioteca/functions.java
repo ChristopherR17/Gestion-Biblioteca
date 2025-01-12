@@ -71,6 +71,7 @@ public class functions {
                 break;
 
             } else if (optionUsers.equals("modificar") || optionUsers.equals("2")){
+                modificarUsuario(scanner);
                 break;
 
             } else if (optionUsers.equals("eliminar") || optionUsers.equals("3")){
@@ -444,6 +445,93 @@ public class functions {
          }
     }
 
+    public static void modificarUsuario(Scanner scanner){
+        /*
+         * Esta función permite modificar los parámetros de un usuario teniendo en cuenta varias cosas
+         * --> 1. La ID del usuario no podrá ser modificada ya que es única para cada usuario, por lo que si se intenta modificar, saldrá un mensaje de ERROR
+         * --> 2. El numero de telefono para cada usuario es único, por lo que si se intenta modificar el numero de telefono de un usuario y coincide con el de otro usuario se mostrará un mensaje de ERROR
+         * @param scanner recibimos el input del usuario de la aplicación         
+         */
+
+         String  filePath = "JSON/usuaris.json";
+
+         try{
+
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaUsuarios = new JSONArray(content);
+
+            System.out.println("Introduzca la ID del usuario que desea modificar: ");
+            int changeId = scanner.nextInt();
+            scanner.nextLine();
+            boolean usuarioFinded = false;
+
+            for (int i = 0; i < listaUsuarios.length(); i++) {
+                JSONObject usuario = listaUsuarios.getJSONObject(i);
+                int id = usuario.getInt("id");
+                
+
+                if (id == changeId){
+
+                    usuarioFinded = true;
+                    String changeNombre = usuario.getString("nom");
+                    String changeApellido = usuario.getString("cognom");
+                    System.out.println("Estas seguro que deseas modificar al usuario: "+changeNombre+" "+changeApellido+" ? ['Yes' // 'No']");
+                    String confirmationModified = scanner.nextLine().toLowerCase();
+
+                    if (confirmationModified.equals("yes")){
+                        System.out.println("Que quieres modificar ? 1. Nombre // 2. Apellido // 3. Telefono");
+                        int aModificar = scanner.nextInt();
+                        scanner.nextLine();
+
+                        if (aModificar == 1){
+                            System.out.println("Escribe un nuevo nombre: ");
+                            String newName = scanner.nextLine();
+                            usuario.put("nom", newName);
+
+                        } else if (aModificar == 2){
+                            System.out.println("Escribe un nuevo apellido: ");
+                            String newApellido = scanner.nextLine();
+                            usuario.put("cognom", newApellido);
+
+                        } else if (aModificar == 3){
+                            System.out.println("Escribe un nuevo numero de telefono: ");
+                            int newNumber = scanner.nextInt();
+                            scanner.nextLine();
+
+                            boolean telefonoDuplicado = false;
+                            for (int j = 0; j < listaUsuarios.length(); j++){
+                                if (j != i && listaUsuarios.getJSONObject(j).getInt("telefon") == newNumber){
+                                    telefonoDuplicado = true;
+                                    break;
+                                }
+                            }
+
+                            if (telefonoDuplicado){
+                                System.out.println("El numero de telefono ya está asociado a otra persona");
+                            } else {
+                                usuario.put("telefon", newNumber);
+                            }
+
+                        } else {
+                            System.out.println("No se ha realizado ninguna modificación");
+                        }
+                        break;
+                    }
+
+                }
+            }
+
+            if (!usuarioFinded){
+                System.out.println("La ID solicitada no existe, por lo que NO se ha encontrado a  ningún usuario válido");
+            }
+    
+            Files.write(Paths.get(filePath), listaUsuarios.toString(4).getBytes());
+
+         } catch (Exception e){
+            System.out.println("No se pudo modificar el usuario: "+e.getMessage());
+         }
+    }
+
     public static void llistarUsuaris(Scanner scanner){
         /*
          * Función que lista los usuarios que ya estan en los archivos JSON
@@ -488,7 +576,7 @@ public class functions {
             }
          
          } catch (Exception e){
-            System.out.println("Error de compilación de usuarios...");
+            System.out.println("Error de compilación de usuarios..."+ e.getMessage());
          }
          
          
