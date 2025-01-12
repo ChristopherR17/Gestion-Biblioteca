@@ -72,6 +72,7 @@ public class functions {
                 break;
 
             } else if (optionUsers.equals("llistar") || optionUsers.equals("4")){
+                llistarUsuaris(scanner);
                 break;
 
             } else if (optionUsers.equals("menu") || optionUsers.equals("0")){
@@ -192,7 +193,6 @@ public class functions {
          * lanza una excepcion para que no pete el code
          */
 
-
         for (int i = 0; i < llista.length();i++){
             JSONObject user = llista.getJSONObject(i);
             int telefon = user.getInt("telefon");
@@ -254,5 +254,52 @@ public class functions {
         } catch (Exception e) {
             System.out.println("Error al accedir al fitxer: " + e.getMessage());
         }
+    }
+    public static void llistarUsuaris(Scanner scanner){
+        /*
+         * Función que lista los usuarios que ya estan en los archivos JSON
+         * @param sacnner -> Es el valor de selecciónd el usuario
+         */
+
+         String filePath =  "JSON/usuaris.json"; 
+
+         try{
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaUsuarios = new JSONArray(content);
+            
+            int maxNombre = 0;
+            int maxApellido = 0;
+            
+
+            //Este for es para el encabezado
+            for (int i = 0; i < listaUsuarios.length(); i++) {
+                
+                JSONObject usuario = listaUsuarios.getJSONObject(i);
+                String nombre = usuario.getString("nom");
+                String apellido = usuario.getString("cognom");
+                maxNombre = Math.max(maxNombre, nombre.length());//Esto compara cual de los 2 es mas largo
+                maxApellido = Math.max(maxApellido, apellido.length());
+
+            }
+
+            System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 6)+" | Telefon"); // El -3 es para el espacio que hay entre la barra y el apellido
+            System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9));
+
+            //Este for es para los nombres
+            for (int i = 0; i < listaUsuarios.length(); i++) {
+                JSONObject usuario = listaUsuarios.getJSONObject(i);
+                String nombre = usuario.getString("nom");
+                String apellido = usuario.getString("cognom");
+                int telefono = usuario.getInt("telefon");
+                System.out.printf("%-" + maxNombre + "s | %-" + maxApellido + "s | %s%n",
+                        nombre, apellido, telefono);
+
+            }
+         
+         } catch (Exception e){
+            System.out.println("Error de compilación de usuarios...");
+         }
+         
+         
     }
 }

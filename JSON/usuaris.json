@@ -4,5 +4,17 @@
         "id": 1,
         "nom": "David",
         "cognom": "Bargados"
+    },
+    {
+        "telefon": 653291288,
+        "id": 2,
+        "nom": "Jordi",
+        "cognom": "Maqueda"
+    },
+    {
+        "telefon": 633297789,
+        "id": 3,
+        "nom": "John",
+        "cognom": "Stephen"
     }
 ]
