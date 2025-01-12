@@ -258,7 +258,7 @@ public class functions {
     public static void llistarUsuaris(Scanner scanner){
         /*
          * Función que lista los usuarios que ya estan en los archivos JSON
-         * @param sacnner -> Es el valor de selecciónd el usuario
+         * @param scanner -> Es el valor de selecciónd el usuario
          * @param maxNombre -> Se usa para calcular la alargada maxima de los nombres para cuadrar la columnas
          * @param maxApellido -> Lo mismo que maxNombre pero para el apellido
          */
