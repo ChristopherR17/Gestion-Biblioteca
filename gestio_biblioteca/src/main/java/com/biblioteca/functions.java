@@ -101,6 +101,7 @@ public class functions {
         String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
             if (optionPrestecs.equals("afegir") || optionPrestecs.equals("1")){
+                addPrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
                 break;
