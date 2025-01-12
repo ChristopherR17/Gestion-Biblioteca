@@ -40,6 +40,7 @@ public class functions {
                 break;
 
             } else if (optionBooks.equals("eliminar") || optionBooks.equals("3")){
+                deleteBook(scanner);
                 break;
 
             } else if (optionBooks.equals("llistar") || optionBooks.equals("4")){
@@ -142,11 +143,13 @@ public class functions {
         }
     }
 
-    /*
-     * Estas son las funciones que sirven para añadir, modificar y eliminar libros.
-     */
-
+    //LIBROS
     public static void addBook (Scanner scanner){
+        /**
+         * Funcion que elimina libros
+         * @param llibresArray -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
+         * Lanza una excepcion para que el codigo no falle
+         */
         try {
             String filePath = "./JSON/llibres.json";
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -218,6 +221,11 @@ public class functions {
     }
 
     public static void modifyBook(Scanner scanner){
+        /**
+         * Funcion que elimina libros
+         * @param llibresArray -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
+         * Lanza una excepcion para que el codigo no falle
+         */
         try {
             String filePath = "./JSON/llibres.json";
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -267,6 +275,46 @@ public class functions {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
+
+    public static void deleteBook(Scanner scanner) {
+        /**
+         * Funcion que elimina libros
+         * @param llibresArray -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
+         * Lanza una excepcion para que el codigo no falle
+         */
+        try {
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+    
+            JSONArray llibresArray = new JSONArray(content);
+    
+            System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+    
+            boolean llibreEliminat = false;
+            for (int i = 0; i < llibresArray.length(); i++) {
+                JSONObject llibre = llibresArray.getJSONObject(i);
+                if (llibre.getInt("id") == id) {
+                    llibresArray.remove(i); 
+                    llibreEliminat = true;
+                    break;
+                }
+            }
+    
+            if (llibreEliminat) {
+                Files.write(Paths.get(filePath), llibresArray.toString(4).getBytes());
+                System.out.println("Llibre eliminat correctament.");
+            } else {
+                System.out.println("Error: No s'ha trobat cap llibre amb aquesta ID.");
+            }
+    
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }    
 
     //USUARIOS  
     public static void comprobarTelefon(int num,JSONArray llista)  throws IllegalArgumentException{
