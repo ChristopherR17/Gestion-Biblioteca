@@ -433,7 +433,57 @@ public class functions {
          } catch (Exception e){
             System.out.println("Error de compilación de usuarios...");
          }
-         
-         
+    }
+
+    //PRESTECS
+    public static void addPrestec(Scanner scanner){
+        try {
+            String filePath = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            JSONArray prestecsArray = new JSONArray(content);
+
+            System.out.println("Introdueix l'ID del préstec: ");
+            int id = scanner.nextInt();
+
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject prestec = prestecsArray.getJSONObject(i);
+                if (prestec.getInt("id") == id){
+                    System.out.println("Error: Ja existeix un préstec amb aquesta ID.");
+                    return;
+                }
+            }
+
+            System.out.println("Introdueix l'ID del llibre prestat: ");
+            int idLlibre = scanner.nextInt();
+
+            System.out.println("Introdueix l'ID de l'usuari: ");
+            int idUsuari = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("Introdueix la data del préstec (format: yyyy-MM-dd): ");
+            String dataPrestec = scanner.nextLine();
+
+            System.out.println("Introdueix la data de devolució (format: yyyy-MM-dd o deixa-ho buit si no hi ha devolució): ");
+            String dataDevolucio = scanner.nextLine();
+
+            JSONObject nouPrestec = new JSONObject();
+            nouPrestec.put("id", id);
+            nouPrestec.put("idLlibre", idLlibre);
+            nouPrestec.put("idUsuari", idUsuari);
+            nouPrestec.put("dataPrestec", dataPrestec);
+            nouPrestec.put("dataDevolucio", dataDevolucio.isEmpty() ? JSONObject.NULL : dataDevolucio);
+
+            prestecsArray.put(nouPrestec);
+
+            Files.write(Paths.get(filePath), prestecsArray.toString(4).getBytes());
+
+            System.out.println("Préstec afegit correctament.");
+
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
     }
 }
