@@ -74,6 +74,7 @@ public class functions {
                 break;
 
             } else if (optionUsers.equals("eliminar") || optionUsers.equals("3")){
+                eliminarUsuario(scanner);
                 break;
 
             } else if (optionUsers.equals("llistar") || optionUsers.equals("4")){
@@ -387,6 +388,62 @@ public class functions {
             System.out.println("Error al accedir al fitxer: " + e.getMessage());
         }
     }
+    public static void eliminarUsuario(Scanner scanner){
+
+        /*
+         * Esta función es la que se usará para eliminar a los usuarios
+         * @param scanner -> Recibe el valor del input del usuario
+         * Lanza una exepción si el usuario no es conocido
+         * Los usuarios se eliminan mediante el Id, una vez pulsada la Id, aparecerá el mensaje de... estas seguro que deseas eliminar al usuario ("xxxxxxxx") ? Si confirmamos que si se borrarà
+         * Si la ID introducida no se conoce o no está creada lanzará un mensaje de error
+         */
+     
+        String filePath = "JSON/usuaris.json";
+
+        try {
+        
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        JSONArray listaUsuarios = new JSONArray(content);
+
+        System.out.println("Introduzca la ID del usuario que desea eliminar: ");
+        int deleteId = scanner.nextInt();
+        scanner.nextLine();
+        boolean usuarioEncontrado = false;
+
+        for (int i = 0; i < listaUsuarios.length(); i++) {
+
+            JSONObject usuario = listaUsuarios.getJSONObject(i);
+            int id = usuario.getInt("id");
+
+            if (id == deleteId ) {
+
+                usuarioEncontrado = true;
+                String deletedName = usuario.getString("nom");
+                String deletedApellido = usuario.getString("cognom");
+                System.out.println("Estas seguro que deseas eliminar al usuario: "+deletedName+" "+deletedApellido+" ? ['Yes' // 'No']");
+                String confirmation = scanner.nextLine().toLowerCase();
+
+                if (confirmation.equals("yes")){
+                    listaUsuarios.remove(i);
+                    System.out.println("Usuario eliminado");
+                } else {
+                    System.out.println("Usuario no eliminado");
+                }
+                break;
+            }
+        }
+
+        if (!usuarioEncontrado){
+            System.out.println("La ID solicitada no existe, por lo que NO se ha elimiando ningún usuario");
+        }
+
+        Files.write(Paths.get(filePath), listaUsuarios.toString().getBytes());//Aquí se guardan los cambios realizados
+
+        } catch (Exception e){
+            System.out.println("No se pudo eliminar al usuario: "+e.getMessage());
+         }
+    }
+
     public static void llistarUsuaris(Scanner scanner){
         /*
          * Función que lista los usuarios que ya estan en los archivos JSON
