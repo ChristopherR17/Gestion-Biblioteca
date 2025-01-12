@@ -1,1 +1,14 @@
-[{"telefon":658011562,"id":1,"nom":"David","cognom":"Bargados"},{"telefon":653291288,"id":2,"nom":"Jordi","cognom":"Maqueda"}]
+[
+{
+    "telefon":658011562,
+    "id":1,
+    "nom":"David",
+    "cognom":"Bargados"
+},
+{
+    "telefon":653291288,
+    "id":2,
+    "nom":"Jordi",
+    "cognom":"Maqueda"
+    }
+]
