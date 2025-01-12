@@ -259,6 +259,8 @@ public class functions {
         /*
          * Función que lista los usuarios que ya estan en los archivos JSON
          * @param sacnner -> Es el valor de selecciónd el usuario
+         * @param maxNombre -> Se usa para calcular la alargada maxima de los nombres para cuadrar la columnas
+         * @param maxApellido -> Lo mismo que maxNombre pero para el apellido
          */
 
          String filePath =  "JSON/usuaris.json"; 
@@ -271,7 +273,7 @@ public class functions {
             int maxApellido = 0;
             
 
-            //Este for es para el encabezado
+            //Este "for" es para el encabezado
             for (int i = 0; i < listaUsuarios.length(); i++) {
                 
                 JSONObject usuario = listaUsuarios.getJSONObject(i);
@@ -282,17 +284,17 @@ public class functions {
 
             }
 
-            System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 6)+" | Telefon"); // El -3 es para el espacio que hay entre la barra y el apellido
+            System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 6)+" | Telefon"); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
             System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9));
 
-            //Este for es para los nombres
+            //Este "for" es para los nombres
             for (int i = 0; i < listaUsuarios.length(); i++) {
                 JSONObject usuario = listaUsuarios.getJSONObject(i);
                 String nombre = usuario.getString("nom");
                 String apellido = usuario.getString("cognom");
                 int telefono = usuario.getInt("telefon");
-                System.out.printf("%-" + maxNombre + "s | %-" + maxApellido + "s | %s%n",
-                        nombre, apellido, telefono);
+
+                System.out.printf("%-" + maxNombre + "s | %-" + maxApellido + "s | %s%n", nombre, apellido, telefono);
 
             }
          
