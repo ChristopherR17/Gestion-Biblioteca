@@ -437,7 +437,7 @@ public class functions {
             System.out.println("La ID solicitada no existe, por lo que NO se ha elimiando ningún usuario");
         }
 
-        Files.write(Paths.get(filePath), listaUsuarios.toString().getBytes());//Aquí se guardan los cambios realizados
+        Files.write(Paths.get(filePath), listaUsuarios.toString(4).getBytes());//Aquí se guardan los cambios realizados
 
         } catch (Exception e){
             System.out.println("No se pudo eliminar al usuario: "+e.getMessage());
