@@ -563,7 +563,6 @@ public class functions {
             int maxNombre = 0;
             int maxApellido = 0;
             
-
             //Este "for" es para el encabezado
             for (int i = 0; i < listaUsuarios.length(); i++) {
                 
@@ -608,18 +607,28 @@ public class functions {
             JSONArray prestecsArray = new JSONArray(content);
 
             System.out.println("=====================================================================");
-            int id = automaticID(prestecsArray);
-            System.out.println("L'ID d'aquest préstec és: " + id);
-            
-            System.out.println("Introdueix l'ID del llibre que vols: ");
-            int idLlibre = scanner.nextInt();
-
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
+
+            /*
+             *Aqui tengo que hacer algo para que se verifique cuantos libros tiene prestados el usuario
+             *  Si ya tiene 4, no se le pude dejar pedir otro.
+            */
+
+            System.out.println("Introdueix l'ID del llibre que vols: ");
+            int idLlibre = scanner.nextInt();
+            //Sirve para limpiar el buffer
             scanner.nextLine();
+
+            /*
+             * Aqui hay que hacer que se verifique que un libro solo se pude prestar una vez
+             */
 
             System.out.println("Introdueix la data del préstec (format: yyyy-MM-dd): ");
             String dataPrestecStr = scanner.nextLine();
+
+            int id = automaticID(prestecsArray);
+            System.out.println("L'ID d'aquest préstec és: " + id);
 
             LocalDate dataPrestec = LocalDate.parse(dataPrestecStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             LocalDate dataDevolucio = dataPrestec.plusDays(7); 
@@ -635,7 +644,7 @@ public class functions {
 
             Files.write(Paths.get(filePath), prestecsArray.toString(4).getBytes());
 
-            System.out.println("Préstec afegit correctament.");
+            System.out.println("Préstec afegit correctament. Tens 7 dies per retornar el llibre.");
 
         } catch (IOException e) {
             System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());

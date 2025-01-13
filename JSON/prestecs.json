@@ -33,5 +33,19 @@
         "idLlibre": 2,
         "id": 4,
         "idUsuari": 3
+    },
+    {
+        "dataDevolucio": "2025-05-30",
+        "dataPrestec": "2025-05-23",
+        "idLlibre": 1,
+        "id": 6,
+        "idUsuari": 4
+    },
+    {
+        "dataDevolucio": "2026-12-09",
+        "dataPrestec": "2026-12-02",
+        "idLlibre": 1,
+        "id": 7,
+        "idUsuari": 4
     }
 ]
