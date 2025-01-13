@@ -186,10 +186,10 @@ public class functions {
 
             JSONArray llibresArray = new JSONArray(content);
 
-            int nextId = automaticID(llibresArray);
+            int id = automaticID(llibresArray);
 
             System.out.println("=====================================================================");
-            System.out.println("L'ID d'aquest llibre és: " + nextId);
+            System.out.println("L'ID d'aquest llibre és: " + id);
 
             String titol;
             while(true){
@@ -208,7 +208,7 @@ public class functions {
             String autor = scanner.nextLine();
 
             JSONObject nouLlibre = new JSONObject();
-            nouLlibre.put("id", nextId);
+            nouLlibre.put("id", id);
             nouLlibre.put("titol", titol);
             nouLlibre.put("autor", autor);
 
@@ -385,7 +385,7 @@ public class functions {
             comprobarLlongitud(telefon); // LLamamos a las funciones anteriores para comprobar que sea correcto
             comprobarTelefon(telefon, jsonArray);
 
-            int id = jsonArray.length() + 1;
+            int id = automaticID(jsonArray);
             JSONObject usuari = new JSONObject(); // Creamos un objeto nuevo para poner los valores pasados
             usuari.put("id", id);
             usuari.put("nom", nom);
@@ -607,13 +607,31 @@ public class functions {
 
             JSONArray prestecsArray = new JSONArray(content);
 
-            int nextId = automaticID(prestecsArray);
-
             System.out.println("=====================================================================");
-            System.out.println("L'ID d'aquest préstec és: " + nextId);
+            int id = automaticID(prestecsArray);
+            System.out.println("L'ID d'aquest préstec és: " + id);
             
             System.out.println("Introdueix l'ID del llibre que vols: ");
             int idLlibre = scanner.nextInt();
+
+            int cont = 0;
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject llibre = prestecsArray.getJSONObject(i);
+
+                // Verificar si el objeto tiene la clave "id"
+                if (llibre.has("id")) {
+                    try {
+                        if (llibre.getInt("id") == idLlibre) {
+                            cont++;
+                            System.out.println("Aquest llibre no esta disponible.");
+                        }
+                    } catch (JSONException e) {
+                        System.out.println("Error al obtener el id como entero: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("L'objecte no té la clau 'id'.");
+                }
+            }
 
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
@@ -626,7 +644,7 @@ public class functions {
             LocalDate dataDevolucio = dataPrestec.plusDays(7); 
 
             JSONObject nouPrestec = new JSONObject();
-            nouPrestec.put("id", nextId);
+            nouPrestec.put("id", id);
             nouPrestec.put("idLlibre", idLlibre);
             nouPrestec.put("idUsuari", idUsuari);
             nouPrestec.put("dataPrestec", dataPrestec);
