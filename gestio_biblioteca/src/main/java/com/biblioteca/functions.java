@@ -135,15 +135,15 @@ public class functions {
 
         String listBooksBy = scanner.nextLine().toLowerCase();
         while (true) {
-            if (listBooksBy.equals("afegir") || listBooksBy.equals("1")){
+            if (listBooksBy.equals("tots") || listBooksBy.equals("1")){
                 break;
-            } else if (listBooksBy.equals("modificar") || listBooksBy.equals("2")){
+            } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
                 break;
-            } else if (listBooksBy.equals("eliminar") || listBooksBy.equals("3")){
+            } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
                 break;
-            } else if (listBooksBy.equals("llistar") || listBooksBy.equals("4")){
+            } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
                 break;
-            } else if (listBooksBy.equals("menu") || listBooksBy.equals("0")){
+            } else if (listBooksBy.equals("tornar al menu de llibres") || listBooksBy.equals("0")){
                 menuBooks(scanner);
                 break;
             }
@@ -298,7 +298,7 @@ public class functions {
             System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
             int id = scanner.nextInt();
-            //Sirve para limpiar el buffer
+            //Sirve para limpiar el buffer(se utiliza cuando seguido de nextInt se hace un nextLine)
             scanner.nextLine();
     
             boolean llibreEliminat = false;
