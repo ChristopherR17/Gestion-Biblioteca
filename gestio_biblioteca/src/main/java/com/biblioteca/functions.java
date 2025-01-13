@@ -614,25 +614,6 @@ public class functions {
             System.out.println("Introdueix l'ID del llibre que vols: ");
             int idLlibre = scanner.nextInt();
 
-            int cont = 0;
-            for (int i = 0; i < prestecsArray.length(); i++) {
-                JSONObject llibre = prestecsArray.getJSONObject(i);
-
-                // Verificar si el objeto tiene la clave "id"
-                if (llibre.has("id")) {
-                    try {
-                        if (llibre.getInt("id") == idLlibre) {
-                            cont++;
-                            System.out.println("Aquest llibre no esta disponible.");
-                        }
-                    } catch (JSONException e) {
-                        System.out.println("Error al obtener el id como entero: " + e.getMessage());
-                    }
-                } else {
-                    System.out.println("L'objecte no té la clau 'id'.");
-                }
-            }
-
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
             scanner.nextLine();

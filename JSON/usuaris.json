@@ -24,9 +24,15 @@
         "cognom": "Gomez"
     },
     {
-        "telefon": 654321789,
-        "id": 5,
+        "telefon": 987465321,
+        "id": 2,
         "nom": "Alejandro",
         "cognom": "Palotes"
+    },
+    {
+        "telefon": 654132798,
+        "id": 6,
+        "nom": "Rosa",
+        "cognom": "Melano"
     }
 ]
