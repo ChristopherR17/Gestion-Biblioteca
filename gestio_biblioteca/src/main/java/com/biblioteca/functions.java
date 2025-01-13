@@ -157,7 +157,7 @@ public class functions {
          * @param array -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
          * @param ids -> es la lista en la que se almacena todas las ID del JSON
          * @param nextId -> es el contador que se compara con la lista y que va sumando de 1 en 1 hasta que encuentra el numero que falte.
-         * @return nextId -> esta variable devuelve la proxima ID a utilizar en el JSON seleccionado.
+         * @return nextId -> esta variable devuelve la proxima ID más pequeña a utilizar en el JSON seleccionado.
          */
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
@@ -165,7 +165,6 @@ public class functions {
             ids.add(objeto.getInt("id"));
         }
 
-        // Encontrar el menor ID disponible
         int nextId = 1;  
         while (ids.contains(nextId)) {
             nextId++;
@@ -204,6 +203,7 @@ public class functions {
                 }
             }
 
+            //El valor de autor puede estar vacio.
             System.out.println("Introduiex l'autor del llibre: ");
             String autor = scanner.nextLine();
 
@@ -229,7 +229,7 @@ public class functions {
         /**
          * Funcion que elimina libros
          * @param llibresArray -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
-         * Lanza una excepcion para que el codigo no falle
+         * Lanza una excepcion en el caso de que la lectura del JSON falle
          */
         try {
             String filePath = "./JSON/llibres.json";
@@ -240,6 +240,7 @@ public class functions {
             System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols modificar: ");
             int id = scanner.nextInt();
+            //Sirve para limpiar el buffer
             scanner.nextLine();
 
             JSONObject llibreModificar = null;
@@ -297,14 +298,22 @@ public class functions {
             System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
             int id = scanner.nextInt();
+            //Sirve para limpiar el buffer
             scanner.nextLine();
     
             boolean llibreEliminat = false;
             for (int i = 0; i < llibresArray.length(); i++) {
                 JSONObject llibre = llibresArray.getJSONObject(i);
+
                 if (llibre.getInt("id") == id) {
-                    llibresArray.remove(i); 
-                    llibreEliminat = true;
+                    String deletedTitol = llibre.getString("titol");
+                    System.out.println("Estas segur de que vols eliminar el llibre: " +deletedTitol+ " (Yes/No)");
+                    String confirmacion = scanner.nextLine().trim().toLowerCase();
+                    
+                    if (confirmacion.equals("yes")){
+                        llibresArray.remove(i); 
+                        llibreEliminat = true;
+                    }
                     break;
                 }
             }
