@@ -6,12 +6,6 @@
         "cognom": "Bargados"
     },
     {
-        "telefon": 655644633,
-        "id": 2,
-        "nom": "Alejandro",
-        "cognom": "Palotes"
-    },
-    {
         "telefon": 633297789,
         "id": 3,
         "nom": "John",
@@ -22,5 +16,17 @@
         "id": 4,
         "nom": "Christopher",
         "cognom": "Carrillo"
+    },
+    {
+        "telefon": 321654987,
+        "id": 5,
+        "nom": "Mario",
+        "cognom": "Gomez"
+    },
+    {
+        "telefon": 654321789,
+        "id": 5,
+        "nom": "Alejandro",
+        "cognom": "Palotes"
     }
 ]

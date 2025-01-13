@@ -151,12 +151,35 @@ public class functions {
         }
     }
 
+    public static Integer automaticID(JSONArray array){
+        /**
+         * Funcion para añadir la ID automaticamente
+         * @param array -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
+         * @param ids -> es la lista en la que se almacena todas las ID del JSON
+         * @param nextId -> es el contador que se compara con la lista y que va sumando de 1 en 1 hasta que encuentra el numero que falte.
+         * @return nextId -> esta variable devuelve la proxima ID a utilizar en el JSON seleccionado.
+         */
+        List<Integer> ids = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject objeto = array.getJSONObject(i);
+            ids.add(objeto.getInt("id"));
+        }
+
+        // Encontrar el menor ID disponible
+        int nextId = 1;  
+        while (ids.contains(nextId)) {
+            nextId++;
+        }
+
+        return nextId;
+    }
+
     //LIBROS
     public static void addBook (Scanner scanner){
         /**
-         * Funcion que elimina libros
+         * Funcion que añade libros
          * @param llibresArray -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
-         * Lanza una excepcion para que el codigo no falle
+         * Lanza una excepcion en el caso de que la lectura del JSON falle
          */
         try {
             String filePath = "./JSON/llibres.json";
@@ -164,36 +187,10 @@ public class functions {
 
             JSONArray llibresArray = new JSONArray(content);
 
-            int id;
-            while (true) {
-                System.out.println("=====================================================================");
-                System.out.println("Introdueix l'ID del llibre: ");
-                String idInput = scanner.nextLine().trim();
-                if (idInput.isEmpty()) {
-                    System.out.println("Error: L'ID no pot estar buit. Introdueix un valor vàlid.");
-                    continue; 
-                }
-                try {
-                    id = Integer.parseInt(idInput); 
-                    break; 
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: L'ID ha de ser un número. Introdueix un valor vàlid.");
-                }
-            }
+            int nextId = automaticID(llibresArray);
 
-            boolean idExists = false;
-            for (int i = 0; i < llibresArray.length(); i++) {
-                JSONObject llibre = llibresArray.getJSONObject(i);
-                if (llibre.getInt("id") == id){
-                    idExists = true;
-                    break;
-                }
-            }
-
-            if (idExists){
-                System.out.println("Error: L'ID ja existeix. Introdueix una ID única.");
-                return;
-            }
+            System.out.println("=====================================================================");
+            System.out.println("L'ID d'aquest llibre és: " + nextId);
 
             String titol;
             while(true){
@@ -211,7 +208,7 @@ public class functions {
             String autor = scanner.nextLine();
 
             JSONObject nouLlibre = new JSONObject();
-            nouLlibre.put("id", id);
+            nouLlibre.put("id", nextId);
             nouLlibre.put("titol", titol);
             nouLlibre.put("autor", autor);
 
@@ -594,7 +591,6 @@ public class functions {
     public static void addPrestec(Scanner scanner){
         /*
          * Hay que hacer ajustes a esta funcion.
-         * 
          */
         try {
             String filePath = "./JSON/prestecs.json";
@@ -602,18 +598,7 @@ public class functions {
 
             JSONArray prestecsArray = new JSONArray(content);
 
-            // Obtener una lista de todos los IDs actuales
-            List<Integer> ids = new ArrayList<>();
-            for (int i = 0; i < prestecsArray.length(); i++) {
-                JSONObject prestec = prestecsArray.getJSONObject(i);
-                ids.add(prestec.getInt("id"));
-            }
-
-            // Encontrar el menor ID disponible
-            int nextId = 1;  
-            while (ids.contains(nextId)) {
-                nextId++;
-            }
+            int nextId = automaticID(prestecsArray);
 
             System.out.println("=====================================================================");
             System.out.println("L'ID d'aquest préstec és: " + nextId);
