@@ -165,6 +165,7 @@ public class functions {
             ids.add(objeto.getInt("id"));
         }
 
+        // Encontrar el menor ID disponible
         int nextId = 1;  
         while (ids.contains(nextId)) {
             nextId++;
@@ -187,7 +188,6 @@ public class functions {
             JSONArray llibresArray = new JSONArray(content);
 
             int id = automaticID(llibresArray);
-
             System.out.println("=====================================================================");
             System.out.println("L'ID d'aquest llibre és: " + id);
 
@@ -203,7 +203,7 @@ public class functions {
                 }
             }
 
-            //El valor de autor puede estar vacio.
+            //El autor puede ir vacio porque a veces este se desconoce
             System.out.println("Introduiex l'autor del llibre: ");
             String autor = scanner.nextLine();
 
@@ -298,13 +298,12 @@ public class functions {
             System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
             int id = scanner.nextInt();
-            //Sirve para limpiar el buffer(se utiliza cuando seguido de nextInt se hace un nextLine)
+            //Sirve para limpiar el buffer
             scanner.nextLine();
     
             boolean llibreEliminat = false;
             for (int i = 0; i < llibresArray.length(); i++) {
                 JSONObject llibre = llibresArray.getJSONObject(i);
-
                 if (llibre.getInt("id") == id) {
                     String deletedTitol = llibre.getString("titol");
                     System.out.println("Estas segur de que vols eliminar el llibre: " +deletedTitol+ " (Yes/No)");
@@ -600,6 +599,7 @@ public class functions {
     public static void addPrestec(Scanner scanner){
         /*
          * Hay que hacer ajustes a esta funcion.
+         * 
          */
         try {
             String filePath = "./JSON/prestecs.json";
