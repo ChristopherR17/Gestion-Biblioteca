@@ -3,6 +3,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.json.JSONObject;
@@ -12,7 +16,7 @@ import org.json.JSONException;
 public class functions {
     //Funciones de estetica de menu
     public static void menu (){
-        System.out.println("==========================");
+        System.out.println("=====================================================================");
         System.out.println("Gestió de bilioteca");
         System.out.println("1. Llibres");
         System.err.println("2. Usuaris");
@@ -21,7 +25,7 @@ public class functions {
     }
     
     public static void menuBooks (Scanner scanner){
-        System.out.println("==========================");
+        System.out.println("=====================================================================");
         System.out.println("Gestió de llibres");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -44,6 +48,7 @@ public class functions {
                 break;
 
             } else if (optionBooks.equals("llistar") || optionBooks.equals("4")){
+                menuListBooks(scanner);
                 break;
 
             } else if (optionBooks.equals("menu") || optionBooks.equals("0")){
@@ -56,7 +61,7 @@ public class functions {
     }
 
     public static void menUsers(Scanner scanner){
-        System.out.println("==========================");
+        System.out.println("=====================================================================");
         System.out.println("Gestió d'usuaris");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -92,7 +97,7 @@ public class functions {
     }
 
     public static void menuPrestecs(Scanner scanner){
-        System.out.println("==========================");
+        System.out.println("=====================================================================");
         System.out.println("Gestió dels préstecs");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -103,6 +108,7 @@ public class functions {
         String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
             if (optionPrestecs.equals("afegir") || optionPrestecs.equals("1")){
+                addPrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
                 break;
@@ -119,13 +125,13 @@ public class functions {
     }
 
     public static void menuListBooks (Scanner scanner){
-        System.out.println("==========================");
+        System.out.println("=====================================================================");
         System.out.println("Llistar llibres");
         System.out.println("1. Tots");
         System.out.println("2. En préstec");
         System.out.println("3. Per autor");
         System.out.println("4. Cercar títol");
-        System.out.println("Tornar al menú de llibres");
+        System.out.println("0. Tornar al menú de llibres");
 
         String listBooksBy = scanner.nextLine().toLowerCase();
         while (true) {
@@ -138,7 +144,7 @@ public class functions {
             } else if (listBooksBy.equals("llistar") || listBooksBy.equals("4")){
                 break;
             } else if (listBooksBy.equals("menu") || listBooksBy.equals("0")){
-                menu();
+                menuBooks(scanner);
                 break;
             }
 
@@ -160,7 +166,7 @@ public class functions {
 
             int id;
             while (true) {
-                System.out.println("===========================");
+                System.out.println("=====================================================================");
                 System.out.println("Introdueix l'ID del llibre: ");
                 String idInput = scanner.nextLine().trim();
                 if (idInput.isEmpty()) {
@@ -234,6 +240,7 @@ public class functions {
 
             JSONArray llibresArray = new JSONArray(content);
 
+            System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols modificar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
@@ -289,7 +296,8 @@ public class functions {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
     
             JSONArray llibresArray = new JSONArray(content);
-    
+            
+            System.out.println("=====================================================================");
             System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
             int id = scanner.nextInt();
             scanner.nextLine();
@@ -358,6 +366,7 @@ public class functions {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             JSONArray jsonArray = new JSONArray(content);
 
+            System.out.println("=====================================================================");
             System.out.println("Introdueix el nom: ");
             String nom = scanner.nextLine();
 
@@ -561,6 +570,7 @@ public class functions {
 
             }
 
+            System.out.println("=====================================================================");
             System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 6)+" | Telefon"); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
             System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9));
 
@@ -578,7 +588,66 @@ public class functions {
          } catch (Exception e){
             System.out.println("Error de compilación de usuarios..."+ e.getMessage());
          }
-         
-         
+    }
+
+    //PRESTECS
+    public static void addPrestec(Scanner scanner){
+        /*
+         * Hay que hacer ajustes a esta funcion.
+         * 
+         */
+        try {
+            String filePath = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+            JSONArray prestecsArray = new JSONArray(content);
+
+            // Obtener una lista de todos los IDs actuales
+            List<Integer> ids = new ArrayList<>();
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject prestec = prestecsArray.getJSONObject(i);
+                ids.add(prestec.getInt("id"));
+            }
+
+            // Encontrar el menor ID disponible
+            int nextId = 1;  
+            while (ids.contains(nextId)) {
+                nextId++;
+            }
+
+            System.out.println("=====================================================================");
+            System.out.println("L'ID d'aquest préstec és: " + nextId);
+            
+            System.out.println("Introdueix l'ID del llibre que vols: ");
+            int idLlibre = scanner.nextInt();
+
+            System.out.println("Introdueix la teva ID(la del usuari): ");
+            int idUsuari = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("Introdueix la data del préstec (format: yyyy-MM-dd): ");
+            String dataPrestecStr = scanner.nextLine();
+
+            LocalDate dataPrestec = LocalDate.parse(dataPrestecStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate dataDevolucio = dataPrestec.plusDays(7); 
+
+            JSONObject nouPrestec = new JSONObject();
+            nouPrestec.put("id", nextId);
+            nouPrestec.put("idLlibre", idLlibre);
+            nouPrestec.put("idUsuari", idUsuari);
+            nouPrestec.put("dataPrestec", dataPrestec);
+            nouPrestec.put("dataDevolucio", dataDevolucio.toString());
+
+            prestecsArray.put(nouPrestec);
+
+            Files.write(Paths.get(filePath), prestecsArray.toString(4).getBytes());
+
+            System.out.println("Préstec afegit correctament.");
+
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
     }
 }

@@ -10,5 +10,17 @@
         "id": 2,
         "nom": "Alejandro",
         "cognom": "Palotes"
+    },
+    {
+        "telefon": 633297789,
+        "id": 3,
+        "nom": "John",
+        "cognom": "Stephen"
+    },
+    {
+        "telefon": 654321987,
+        "id": 4,
+        "nom": "Christopher",
+        "cognom": "Carrillo"
     }
 ]
