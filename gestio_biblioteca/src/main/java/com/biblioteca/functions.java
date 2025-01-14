@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.print.DocFlavor.STRING;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -115,6 +117,7 @@ public class functions {
             } else if (optionPrestecs.equals("eliminar") || optionPrestecs.equals("3")){
                 break;
             } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("4")){
+                filterPrestecs(scanner);
                 break;
             } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
                 menu();
@@ -687,6 +690,66 @@ public class functions {
             System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {
             System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }
+
+    public static void filterPrestecs (Scanner scanner){
+        /*
+         * Función que se utiliza para filtrar todos los prestámos
+         * Información que se verá en el filtrado
+         * 1 --> Id del usuario al que se le realiza el prestamos
+         * 2 --> Id del libro prestado 
+         * 3 --> Fecha en la que se realiza el prestámo
+         * @param scanner: el input del usuario en el menú
+         */
+
+        String filePath = "JSON/prestecs.json";
+
+        try {
+            
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaPrestecs = new JSONArray(content);
+
+            int maxId = 2;
+            int maxDataPrestec = 10;
+            int maxDataDevolucio = 10;
+
+            //Este for es para el formato del encabezado
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+                String dataPrestec = prestec.getString("dataPrestec");
+                String dataDevolucio = "null";
+
+                if (!prestec.isNull("dataDevolucio")){
+                    dataDevolucio = prestec.getString("dataDevolucio");
+                }
+
+                maxDataPrestec = Math.max(maxDataPrestec, dataPrestec.length());
+                maxDataDevolucio = Math.max(maxDataDevolucio, dataDevolucio.length());
+            }
+
+            System.out.println("=====================================================================");
+            System.out.println("Id" + " ".repeat(maxId - 2) + "| Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
+            System.out.println("-".repeat(maxId) + "---" +"-".repeat(maxDataPrestec) + "---" +"-".repeat(maxDataDevolucio)); //Separadores
+
+            //Este for es para el contenido del filtrado
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+                int id = prestec.getInt("id");
+                String dataPrestec = prestec.getString("dataPrestec");
+                String dataDevolucio = "null";
+
+                if (!prestec.isNull("dataDevolucio")) {
+                    dataDevolucio = prestec.getString("dataDevolucio");
+                }
+    
+                System.out.printf("%-" + maxId + "d | %s | %-" + maxDataDevolucio + "s\n", id, dataPrestec, dataDevolucio);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al filtrar los prestamos: "+ e.getMessage());
         }
     }
 }
