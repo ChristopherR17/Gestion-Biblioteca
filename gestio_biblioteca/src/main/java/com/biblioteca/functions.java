@@ -116,6 +116,7 @@ public class functions {
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
                 break;
             } else if (optionPrestecs.equals("eliminar") || optionPrestecs.equals("3")){
+                deletePrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("4")){
                 filterPrestecs(scanner);
@@ -776,11 +777,10 @@ public class functions {
         /*
         * Función que permite añadir un nuevo préstamo de un libro a un usuario.
         *
-        * La función realiza las siguientes validaciones antes de registrar el préstamo:
-        * 1. Verifica si la ID del usuario existe en el archivo JSON de usuarios con la funcion verificarId().
-        * 2. Comprueba cuántos libros tiene prestados el usuario. Si ya tiene 4, no se permite el nuevo préstamo. Lo hace con la funcion contarPrestecsUsuario().
-        * 3. Verifica si la ID del libro existe en el archivo JSON de libros con la funcion verificarId().
-        * 4. Comprueba si el libro ya está prestado. Un libro no puede ser prestado más de una vez. Lo hace con la funcion estaLlibrePrestado().
+        * 1.Verifica si la ID del usuario existe en el archivo JSON de usuarios con la funcion verificarId().
+        * 2.Comprueba cuántos libros tiene prestados el usuario. Si ya tiene 4, no se permite el nuevo préstamo. Lo hace con la funcion contarPrestecsUsuario().
+        * 3.Verifica si la ID del libro existe en el archivo JSON de libros con la funcion verificarId().
+        * 4.Comprueba si el libro ya está prestado. Un libro no puede ser prestado más de una vez. Lo hace con la funcion estaLlibrePrestado().
         */
 
         try {
@@ -795,13 +795,11 @@ public class functions {
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
 
-            // Verificar si la ID del usuari existe en usuaris.json
             if (!verificarId(usuarisPath, idUsuari)) {
                 System.out.println("Error: La ID del usuari no existeix.");
                 return;
             }
 
-            //Verificar cuantos libros tiene prestados el usuario
             int contUsuari = contarPrestecsUsuario(prestecsArray, idUsuari);
             if (contUsuari >= 4){
                 System.out.println("Error: Ja tens 4 llibres en préstec. No pots sobrepasar el límit.");
@@ -813,13 +811,11 @@ public class functions {
             //Sirve para limpiar el buffer
             scanner.nextLine();
 
-            // Verificar si la ID del llibre existe en llibres.json
             if (!verificarId(llibresPath, idLlibre)) {
                 System.out.println("Error: La ID del llibre no existeix.");
                 return;
             }
 
-            // Verificar si el libro ya está prestado
             if (estaLlibrePrestado(prestecsArray, idLlibre)) {
                 System.out.println("Error: Aquest llibre ja es troba en préstec.");
                 return;
@@ -859,6 +855,45 @@ public class functions {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
+
+    /*
+    * Función que elimina un préstamo existente del archivo JSON.
+    */
+    public static void deletePrestec(Scanner scanner) {
+        try {
+            String prestecsPath = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(prestecsPath)));
+
+            JSONArray prestecsArray = new JSONArray(content);
+
+            System.out.println("=====================================================================");
+            System.out.println("Introdueix l'ID del préstec que vols eliminar: ");
+            int idPrestec = scanner.nextInt();
+
+            boolean prestecEncontrado = false;
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject prestec = prestecsArray.getJSONObject(i);
+                if (prestec.getInt("id") == idPrestec) {
+                    prestecsArray.remove(i);
+                    prestecEncontrado = true;
+                    break;
+                }
+            }
+
+            if (prestecEncontrado) {
+                Files.write(Paths.get(prestecsPath), prestecsArray.toString(4).getBytes());
+                System.out.println("Préstec eliminat correctament.");
+            } else {
+                System.out.println("Error: No s'ha trobat cap préstec amb aquesta ID.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }
+
 
     public static void filterPrestecs (Scanner scanner){
         /*
