@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -733,33 +734,60 @@ public class functions {
          }
     }
 
-    public static void verificarIdLlibre(int id) throws IOException{
-        String filePath = "./JSON/prestecs.json";
+    public static boolean verificarId(String filePath, int id) throws IOException {
+        //Sirve para verificar si la id se encuentra en el archivo json.
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
-
-        JSONArray llibresArray = new JSONArray(content);
-
-        for (int i = 0; i < llibresArray.length(); i++) {
-            JSONObject idLlibre = llibresArray.getJSONObject(i);
-            if (idLlibre.getInt("id") != id){
-                System.out.println("No se ha encontrado la ID.");
-                return;
+        JSONArray jsonArray = new JSONArray(content);
+    
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if (jsonObject.getInt("id") == id) {
+                return true; 
             }
-            break;
         }
+        return false; 
+    }
+     
+    private static int contarPrestecsUsuario(JSONArray prestecsArray, int idUsuari) {
+        // Cuenta cuántos libros tiene prestados un usuario
+        int count = 0;
+        for (int i = 0; i < prestecsArray.length(); i++) {
+            JSONObject prestec = prestecsArray.getJSONObject(i);
+            if (prestec.getInt("idUsuari") == idUsuari) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static boolean estaLlibrePrestado(JSONArray prestecsArray, int idLlibre) {
+        // Verifica si un libro ya está prestado
+        for (int i = 0; i < prestecsArray.length(); i++) {
+            JSONObject prestec = prestecsArray.getJSONObject(i);
+            if (prestec.getInt("idLlibre") == idLlibre) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //PRESTECS
     public static void addPrestec(Scanner scanner){
         /*
-         * Hay que hacer ajustes a esta funcion.
-         */
-
-        int contUsuari = 0;
+        * Función que permite añadir un nuevo préstamo de un libro a un usuario.
+        *
+        * La función realiza las siguientes validaciones antes de registrar el préstamo:
+        * 1. Verifica si la ID del usuario existe en el archivo JSON de usuarios con la funcion verificarId().
+        * 2. Comprueba cuántos libros tiene prestados el usuario. Si ya tiene 4, no se permite el nuevo préstamo. Lo hace con la funcion contarPrestecsUsuario().
+        * 3. Verifica si la ID del libro existe en el archivo JSON de libros con la funcion verificarId().
+        * 4. Comprueba si el libro ya está prestado. Un libro no puede ser prestado más de una vez. Lo hace con la funcion estaLlibrePrestado().
+        */
 
         try {
-            String filePath = "./JSON/prestecs.json";
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            String prestecsPath = "./JSON/prestecs.json";
+            String usuarisPath = "./JSON/usuaris.json";
+            String llibresPath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(prestecsPath)));
 
             JSONArray prestecsArray = new JSONArray(content);
 
@@ -767,24 +795,17 @@ public class functions {
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
 
-            /*
-             * Tambien hay que hacer una funcion para saber si la ID existe en el usuaris.json
-             */
+            // Verificar si la ID del usuari existe en usuaris.json
+            if (!verificarId(usuarisPath, idUsuari)) {
+                System.out.println("Error: La ID del usuari no existeix.");
+                return;
+            }
 
-            /*
-             *Aqui tengo que hacer algo para que se verifique cuantos libros tiene prestados el usuario
-             *  Si ya tiene 4, no se le pude dejar pedir otro.
-            */
-
-            for (int i = 0; i < prestecsArray.length(); i++) {
-                JSONObject usuari = prestecsArray.getJSONObject(i);
-                if (usuari.getInt("id") == idUsuari) {
-                    contUsuari++; //Contador que sirve para saber cuantos libros tiene un usuario de prestamo.
-                    if (contUsuari == 4){
-                        System.out.println("Error: Ja tens 4 llibres en prestec. No pots sobrepasar el límit.");
-                        return;
-                    }
-                }
+            //Verificar cuantos libros tiene prestados el usuario
+            int contUsuari = contarPrestecsUsuario(prestecsArray, idUsuari);
+            if (contUsuari >= 4){
+                System.out.println("Error: Ja tens 4 llibres en préstec. No pots sobrepasar el límit.");
+                return;
             }
 
             System.out.println("Introdueix l'ID del llibre que vols: ");
@@ -792,30 +813,32 @@ public class functions {
             //Sirve para limpiar el buffer
             scanner.nextLine();
 
-            /*
-             * Hay que hacer una funcion que verifique si la ID existe en llibres.json
-             */
+            // Verificar si la ID del llibre existe en llibres.json
+            if (!verificarId(llibresPath, idLlibre)) {
+                System.out.println("Error: La ID del llibre no existeix.");
+                return;
+            }
 
-            /*
-             * Aqui hay que hacer que se verifique que un libro solo se pude prestar una vez
-             */
-
-            for (int i = 0; i < prestecsArray.length(); i++) {
-                JSONObject llibre = prestecsArray.getJSONObject(i);
-                if (llibre.getInt("id") == idLlibre) {
-                    System.out.println("Error: Aquest llibre ja es troba en prestec.");
-                    return;
-                }
+            // Verificar si el libro ya está prestado
+            if (estaLlibrePrestado(prestecsArray, idLlibre)) {
+                System.out.println("Error: Aquest llibre ja es troba en préstec.");
+                return;
             }
 
             System.out.println("Introdueix la data del préstec (format: yyyy-MM-dd): ");
             String dataPrestecStr = scanner.nextLine();
 
-            int id = automaticID(prestecsArray);
-            System.out.println("L'ID d'aquest préstec és: " + id);
-
-            LocalDate dataPrestec = LocalDate.parse(dataPrestecStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            //Esta parte sirve para convertir el String(dataPrestecStr) en un objeto
+            LocalDate dataPrestec;
+            try {
+                dataPrestec = LocalDate.parse(dataPrestecStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: La data introduïda no té el format correcte.");
+                return;
+            }
             LocalDate dataDevolucio = dataPrestec.plusDays(7); 
+
+            int id = automaticID(prestecsArray);
 
             JSONObject nouPrestec = new JSONObject();
             nouPrestec.put("id", id);
@@ -826,7 +849,7 @@ public class functions {
 
             prestecsArray.put(nouPrestec);
 
-            Files.write(Paths.get(filePath), prestecsArray.toString(4).getBytes());
+            Files.write(Paths.get(prestecsPath), prestecsArray.toString(4).getBytes());
 
             System.out.println("Préstec afegit correctament. Tens 7 dies per retornar el llibre.");
 
