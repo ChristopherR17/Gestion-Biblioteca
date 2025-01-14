@@ -144,8 +144,10 @@ public class functions {
             } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
                 break;
             } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
+                filterBooksByAutor(scanner);
                 break;
             } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
+                filterByWordsInTitle(scanner);
                 break;
             } else if (listBooksBy.equals("tornar al menu de llibres") || listBooksBy.equals("0")){
                 menuBooks(scanner);
@@ -377,6 +379,94 @@ public class functions {
 
          } catch (Exception e) {
             System.out.println("Error al filtra libros: "+e.getMessage());
+         }
+    }
+
+    public static void filterBooksByAutor (Scanner scanner){
+        /*
+         * Esta función es la que permite el filtrado de todos los libros por autor y despues listarlos
+         * Se mostrará En formato
+         * Autor: "xxxxxx"
+         * ==============
+         * Titulo 1
+         * Titulo 2
+         * ....
+         */
+
+        try {
+
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            boolean librosFinded = false;
+
+            System.out.println("Seleccione una Autor para filtrar sus libros: [DEBE INTRODUCIR EL AUTOR EN FORMATO 'Camel']");
+            String filterAutor = scanner.nextLine();
+
+            //Encabezado
+            System.out.println("=".repeat(filterAutor.length()+8));
+            System.out.println("Autor/a: " + filterAutor);
+            System.out.println("-".repeat(filterAutor.length()+8));
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String autor = libro.getString("autor");
+
+                if (autor.equals(filterAutor)) {
+                    System.out.println(libro.getString("titol"));
+                    librosFinded = true;
+                }
+            }
+
+            if(!librosFinded){
+                System.out.println("No se han encontrado ningún libro del Autor: "+filterAutor);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al filtrar libros por autor: "+e.getMessage());
+        }
+    }
+
+    public static void filterByWordsInTitle (Scanner scanner){
+        /*
+         * Si lo entendido bien se tiene que poder filtrar libros por palabras en el título.
+         * Haremos que el titulo que recojemos lo pasamos a minúscula así como la palabra que recojemos
+         * Se mostrará en formato similar a 'filterBooksByAutor'
+         */
+
+         try {
+            
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            boolean librosFinded = false;
+
+            System.out.println("Seleccione una palabra para filtrar: ");
+            String filterWord = scanner.nextLine().toLowerCase();
+
+            //Encabezado
+            System.out.println("=".repeat(filterWord.length()+11)); //11 es el ancho total del String + filter word + las 2 "" al inicio y al final
+            System.out.println("Palabra: " +"\""+filterWord+"\"");
+            System.out.println("-".repeat(filterWord.length()+11));
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titulo = libro.getString("titol").toLowerCase();
+
+                if(titulo.contains(filterWord)){
+                    System.out.println(titulo.toUpperCase());
+                    librosFinded = true;
+                }
+            }
+
+            if (!librosFinded){
+                System.out.println("No se han encontrado libros que contengan la palabra: " + filterWord);
+            }
+         } catch (Exception e) {
+            System.out.println("Error al filtras por palabra en el título: " + e.getMessage());
          }
     }
 
