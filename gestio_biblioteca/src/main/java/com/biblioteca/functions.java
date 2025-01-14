@@ -523,7 +523,7 @@ public class functions {
             comprobarLlongitud(telefon); // LLamamos a las funciones anteriores para comprobar que sea correcto
             comprobarTelefon(telefon, jsonArray);
 
-            int id = automaticID(jsonArray);
+            int id = automaticID(jsonArray); // Utilizamos la funcion automaticID() para generar una ID
             JSONObject usuari = new JSONObject(); // Creamos un objeto nuevo para poner los valores pasados
             usuari.put("id", id);
             usuari.put("nom", nom);
@@ -737,8 +737,10 @@ public class functions {
     public static void addPrestec(Scanner scanner){
         /*
          * Hay que hacer ajustes a esta funcion.
-         * 
          */
+
+        int contUsuari = 0;
+
         try {
             String filePath = "./JSON/prestecs.json";
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -750,9 +752,24 @@ public class functions {
             int idUsuari = scanner.nextInt();
 
             /*
+             * Tambien hay que hacer una funcion para saber si la ID existe en el usuaris.json
+             */
+
+            /*
              *Aqui tengo que hacer algo para que se verifique cuantos libros tiene prestados el usuario
              *  Si ya tiene 4, no se le pude dejar pedir otro.
             */
+
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject usuari = prestecsArray.getJSONObject(i);
+                if (usuari.getInt("id") == idUsuari) {
+                    contUsuari++; //Contador que sirve para saber cuantos libros tiene un usuario de prestamo.
+                    if (contUsuari == 4){
+                        System.out.println("Error: Ja tens 4 llibres en prestec. No pots sobrepasar el límit.");
+                        return;
+                    }
+                }
+            }
 
             System.out.println("Introdueix l'ID del llibre que vols: ");
             int idLlibre = scanner.nextInt();
@@ -760,8 +777,20 @@ public class functions {
             scanner.nextLine();
 
             /*
+             * Hay que hacer una funcion que verifique si la ID existe en llibres.json
+             */
+
+            /*
              * Aqui hay que hacer que se verifique que un libro solo se pude prestar una vez
              */
+
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject llibre = prestecsArray.getJSONObject(i);
+                if (llibre.getInt("id") == idLlibre) {
+                    System.out.println("Error: Aquest llibre ja es troba en prestec.");
+                    return;
+                }
+            }
 
             System.out.println("Introdueix la data del préstec (format: yyyy-MM-dd): ");
             String dataPrestecStr = scanner.nextLine();
