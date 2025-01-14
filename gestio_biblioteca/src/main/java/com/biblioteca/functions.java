@@ -733,6 +733,22 @@ public class functions {
          }
     }
 
+    public static void verificarIdLlibre(int id) throws IOException{
+        String filePath = "./JSON/prestecs.json";
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+
+        JSONArray llibresArray = new JSONArray(content);
+
+        for (int i = 0; i < llibresArray.length(); i++) {
+            JSONObject idLlibre = llibresArray.getJSONObject(i);
+            if (idLlibre.getInt("id") != id){
+                System.out.println("No se ha encontrado la ID.");
+                return;
+            }
+            break;
+        }
+    }
+
     //PRESTECS
     public static void addPrestec(Scanner scanner){
         /*
