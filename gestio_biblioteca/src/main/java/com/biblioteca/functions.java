@@ -329,7 +329,52 @@ public class functions {
         } catch (JSONException e) {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
-    }    
+    } 
+
+    public static void filterBooks (Scanner scanner){
+        /*
+         * Esta función realiza un filtrado básico de TODOS LOS LIBROS
+         * @param scanner: el input del usuario en el menú principal
+         */
+
+         try {
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            int maxTitulo = 0;
+            int maxAutor = 0;
+
+            //Iniciamos 'for' para crear el encabezado --> se hace de la misma forma que para filtrar los usuarios
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+                maxTitulo = Math.max(maxTitulo, titol.length());
+                maxAutor = Math.max(maxAutor, autor.length());
+                
+            }
+            
+            System.out.println("=====================================================================");
+            System.out.println("Titol" + " ".repeat(maxTitulo- 3) + " | Autor"+" ".repeat(maxAutor - 6)); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
+            System.out.println("-".repeat(maxTitulo) + "---" + "-".repeat(maxAutor) + "---" + "-".repeat(9));
+
+            //Iniciamos bucle 'for' para los listar los nombres de los titulos
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+
+                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor, titol, autor);
+            }
+
+         } catch (Exception e) {
+            System.out.println("Error al filtra libros: "+e.getMessage());
+         }
+    }
 
     //USUARIOS  
     public static void comprobarTelefon(int num,JSONArray llista)  throws IllegalArgumentException{
@@ -423,7 +468,7 @@ public class functions {
         System.out.println("Introduzca la ID del usuario que desea eliminar: ");
         int deleteId = scanner.nextInt();
         scanner.nextLine();
-        boolean usuarioEncontrado = false;
+        boolean usuarioEncontrado = false;//Esta variabl es la que utilizamos para verificar en caso de error si el usuario no se ha encontrado
 
         for (int i = 0; i < listaUsuarios.length(); i++) {
 
