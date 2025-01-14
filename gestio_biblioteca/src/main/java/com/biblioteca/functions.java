@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.print.DocFlavor.STRING;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -115,6 +117,7 @@ public class functions {
             } else if (optionPrestecs.equals("eliminar") || optionPrestecs.equals("3")){
                 break;
             } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("4")){
+                filterPrestecs(scanner);
                 break;
             } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
                 menu();
@@ -136,12 +139,15 @@ public class functions {
         String listBooksBy = scanner.nextLine().toLowerCase();
         while (true) {
             if (listBooksBy.equals("tots") || listBooksBy.equals("1")){
+                filterBooks(scanner);
                 break;
             } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
                 break;
             } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
+                filterBooksByAutor(scanner);
                 break;
             } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
+                filterByWordsInTitle(scanner);
                 break;
             } else if (listBooksBy.equals("tornar al menu de llibres") || listBooksBy.equals("0")){
                 menuBooks(scanner);
@@ -329,7 +335,140 @@ public class functions {
         } catch (JSONException e) {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
-    }    
+    } 
+
+    public static void filterBooks (Scanner scanner){
+        /*
+         * Esta función realiza un filtrado básico de TODOS LOS LIBROS
+         * @param scanner: el input del usuario en el menú principal
+         */
+
+         try {
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            int maxTitulo = 0;
+            int maxAutor = 0;
+
+            //Iniciamos 'for' para crear el encabezado --> se hace de la misma forma que para filtrar los usuarios
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+                maxTitulo = Math.max(maxTitulo, titol.length());
+                maxAutor = Math.max(maxAutor, autor.length());
+                
+            }
+            
+            System.out.println("=====================================================================");
+            System.out.println("Titol" + " ".repeat(maxTitulo - 4) + "| Autor");
+            System.out.println("-".repeat(maxTitulo) + "---" + "-".repeat(maxAutor) + "---" + "-".repeat(9));
+
+            //Iniciamos bucle 'for' para los listar los nombres de los titulos
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+
+                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor+"s\n", titol, autor);
+            }
+
+         } catch (Exception e) {
+            System.out.println("Error al filtra libros: "+e.getMessage());
+         }
+    }
+
+    public static void filterBooksByAutor (Scanner scanner){
+        /*
+         * Esta función es la que permite el filtrado de todos los libros por autor y despues listarlos
+         * Se mostrará En formato
+         * Autor: "xxxxxx"
+         * ==============
+         * Titulo 1
+         * Titulo 2
+         * ....
+         */
+
+        try {
+
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            boolean librosFinded = false;
+
+            System.out.println("Seleccione una Autor para filtrar sus libros: [DEBE INTRODUCIR EL AUTOR EN FORMATO 'Camel']");
+            String filterAutor = scanner.nextLine();
+
+            //Encabezado
+            System.out.println("=".repeat(filterAutor.length()+8));
+            System.out.println("Autor/a: " + filterAutor);
+            System.out.println("-".repeat(filterAutor.length()+8));
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String autor = libro.getString("autor");
+
+                if (autor.equals(filterAutor)) {
+                    System.out.println(libro.getString("titol"));
+                    librosFinded = true;
+                }
+            }
+
+            if(!librosFinded){
+                System.out.println("No se han encontrado ningún libro del Autor: "+filterAutor);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al filtrar libros por autor: "+e.getMessage());
+        }
+    }
+
+    public static void filterByWordsInTitle (Scanner scanner){
+        /*
+         * Si lo entendido bien se tiene que poder filtrar libros por palabras en el título.
+         * Haremos que el titulo que recojemos lo pasamos a minúscula así como la palabra que recojemos
+         * Se mostrará en formato similar a 'filterBooksByAutor'
+         */
+
+         try {
+            
+            String filePath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaLibros = new JSONArray(content);
+
+            boolean librosFinded = false;
+
+            System.out.println("Seleccione una palabra para filtrar: ");
+            String filterWord = scanner.nextLine().toLowerCase();
+
+            //Encabezado
+            System.out.println("=".repeat(filterWord.length()+11)); //11 es el ancho total del String + filter word + las 2 "" al inicio y al final
+            System.out.println("Palabra: " +"\""+filterWord+"\"");
+            System.out.println("-".repeat(filterWord.length()+11));
+
+            for (int i = 0; i < listaLibros.length(); i++) {
+                JSONObject libro = listaLibros.getJSONObject(i);
+                String titulo = libro.getString("titol").toLowerCase();
+
+                if(titulo.contains(filterWord)){
+                    System.out.println(titulo.toUpperCase());
+                    librosFinded = true;
+                }
+            }
+
+            if (!librosFinded){
+                System.out.println("No se han encontrado libros que contengan la palabra: " + filterWord);
+            }
+         } catch (Exception e) {
+            System.out.println("Error al filtras por palabra en el título: " + e.getMessage());
+         }
+    }
 
     //USUARIOS  
     public static void comprobarTelefon(int num,JSONArray llista)  throws IllegalArgumentException{
@@ -423,7 +562,7 @@ public class functions {
         System.out.println("Introduzca la ID del usuario que desea eliminar: ");
         int deleteId = scanner.nextInt();
         scanner.nextLine();
-        boolean usuarioEncontrado = false;
+        boolean usuarioEncontrado = false;//Esta variabl es la que utilizamos para verificar en caso de error si el usuario no se ha encontrado
 
         for (int i = 0; i < listaUsuarios.length(); i++) {
 
@@ -650,6 +789,66 @@ public class functions {
             System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {
             System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }
+
+    public static void filterPrestecs (Scanner scanner){
+        /*
+         * Función que se utiliza para filtrar todos los prestámos
+         * Información que se verá en el filtrado
+         * 1 --> Id del usuario al que se le realiza el prestamos
+         * 2 --> Id del libro prestado 
+         * 3 --> Fecha en la que se realiza el prestámo
+         * @param scanner: el input del usuario en el menú
+         */
+
+        String filePath = "JSON/prestecs.json";
+
+        try {
+            
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaPrestecs = new JSONArray(content);
+
+            int maxId = 2;
+            int maxDataPrestec = 10;
+            int maxDataDevolucio = 10;
+
+            //Este for es para el formato del encabezado
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+                String dataPrestec = prestec.getString("dataPrestec");
+                String dataDevolucio = "null";
+
+                if (!prestec.isNull("dataDevolucio")){
+                    dataDevolucio = prestec.getString("dataDevolucio");
+                }
+
+                maxDataPrestec = Math.max(maxDataPrestec, dataPrestec.length());
+                maxDataDevolucio = Math.max(maxDataDevolucio, dataDevolucio.length());
+            }
+
+            System.out.println("=====================================================================");
+            System.out.println("Id" + " ".repeat(maxId - 2) + "| Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
+            System.out.println("-".repeat(maxId) + "---" +"-".repeat(maxDataPrestec) + "---" +"-".repeat(maxDataDevolucio)); //Separadores
+
+            //Este for es para el contenido del filtrado
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+                int id = prestec.getInt("id");
+                String dataPrestec = prestec.getString("dataPrestec");
+                String dataDevolucio = "null";
+
+                if (!prestec.isNull("dataDevolucio")) {
+                    dataDevolucio = prestec.getString("dataDevolucio");
+                }
+    
+                System.out.printf("%-" + maxId + "d | %s | %-" + maxDataDevolucio + "s\n", id, dataPrestec, dataDevolucio);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al filtrar los prestamos: "+ e.getMessage());
         }
     }
 }
