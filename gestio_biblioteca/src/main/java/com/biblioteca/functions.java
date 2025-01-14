@@ -136,6 +136,7 @@ public class functions {
         String listBooksBy = scanner.nextLine().toLowerCase();
         while (true) {
             if (listBooksBy.equals("tots") || listBooksBy.equals("1")){
+                filterBooks(scanner);
                 break;
             } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
                 break;
@@ -357,7 +358,7 @@ public class functions {
             }
             
             System.out.println("=====================================================================");
-            System.out.println("Titol" + " ".repeat(maxTitulo- 3) + " | Autor"+" ".repeat(maxAutor - 6)); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
+            System.out.println("Titol" + " ".repeat(maxTitulo - 4) + "| Autor");
             System.out.println("-".repeat(maxTitulo) + "---" + "-".repeat(maxAutor) + "---" + "-".repeat(9));
 
             //Iniciamos bucle 'for' para los listar los nombres de los titulos
@@ -368,7 +369,7 @@ public class functions {
                 String titol = libro.getString("titol");
                 String autor = libro.getString("autor");
 
-                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor, titol, autor);
+                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor+"s\n", titol, autor);
             }
 
          } catch (Exception e) {
