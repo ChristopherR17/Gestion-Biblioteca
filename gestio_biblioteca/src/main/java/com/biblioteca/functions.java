@@ -34,7 +34,7 @@ public class functions {
         System.out.println("2. Modificar");
         System.out.println("3. Eliminar");
         System.out.println("4. Llistar");
-        System.out.println("0. Tornar el menú principal");
+        System.out.println("0. Tornar el menú principal ['menu']");
 
         String optionBooks = scanner.nextLine().toLowerCase();
         while (true) {
@@ -70,7 +70,7 @@ public class functions {
         System.out.println("2. Modificar");
         System.out.println("3. Eliminar");
         System.out.println("4. Llistar"); 
-        System.out.println("0. Tornar el menú principal");
+        System.out.println("0. Tornar el menú principal ['menu']");
 
         String optionUsers = scanner.nextLine().toLowerCase();
         while (true) {
@@ -133,7 +133,7 @@ public class functions {
         System.out.println("2. Modificar");
         System.out.println("3. Eliminar");
         System.out.println("4. Llistar"); 
-        System.out.println("0. Tornar el menú principal");
+        System.out.println("0. Tornar el menú principal ['menu']");
 
         String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
@@ -163,7 +163,7 @@ public class functions {
         System.out.println("2. En préstec");
         System.out.println("3. Per autor");
         System.out.println("4. Cercar títol");
-        System.out.println("0. Tornar al menú de llibres");
+        System.out.println("0. Tornar al menú de llibres ['menu llibres']");
 
         String listBooksBy = scanner.nextLine().toLowerCase();
         while (true) {
@@ -179,7 +179,7 @@ public class functions {
             } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
                 filterByWordsInTitle(scanner);
                 break;
-            } else if (listBooksBy.equals("tornar al menu de llibres") || listBooksBy.equals("0")){
+            } else if (listBooksBy.equals("menu llibres") || listBooksBy.equals("0")){
                 menuBooks(scanner);
                 break;
             }
@@ -192,7 +192,7 @@ public class functions {
          * Funcion para añadir la ID automaticamente
          * @param array -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
          * @param ids -> es la lista en la que se almacena todas las ID del JSON
-         * @param nextId -> es el contador que se compara con la lista y que va sumando de 1 en 1 hasta que encuentra el numero que falte.
+         * @param nextId -> es el contador que se compara con la lista y que se va sumando de 1 en 1 hasta que encuentra el numero que falte.
          * @return nextId -> esta variable devuelve la proxima ID más pequeña a utilizar en el JSON seleccionado.
          */
         List<Integer> ids = new ArrayList<>();
@@ -1114,10 +1114,10 @@ public class functions {
         }
     }
 
-    /*
-    * Función que elimina un préstamo existente del archivo JSON.
-    */
     public static void deletePrestec(Scanner scanner) {
+        /*
+        * Función que elimina un préstamo existente del archivo JSON.
+        */
         try {
             String prestecsPath = "./JSON/prestecs.json";
             String content = new String(Files.readAllBytes(Paths.get(prestecsPath)));
