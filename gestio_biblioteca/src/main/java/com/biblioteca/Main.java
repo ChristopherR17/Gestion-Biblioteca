@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        //HACER EL BUCLE PRINCIPAL EN UNA FUNCION ? 
+        //BUCLE PRINCIPAL DE LA FUNCION
         while (true) {
             functions.menu();
             System.out.println("Escull una opció: ");

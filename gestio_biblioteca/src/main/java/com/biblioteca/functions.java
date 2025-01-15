@@ -144,6 +144,7 @@ public class functions {
                 filterBooks(scanner);
                 break;
             } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
+                filterBooksPrestados(scanner);
                 break;
             } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
                 filterBooksByAutor(scanner);
@@ -389,6 +390,81 @@ public class functions {
          }
     }
 
+    public static void filterBooksPrestados (Scanner scanner){
+        /*
+         * Esta función muestra los libros los cuales estan prestados
+         * Se mostrarà la titulo, autor, la id del libro y la id del prestamo
+         */
+
+         try {
+            String filePath = "./JSON/llibres.json";
+            String filePathPrestecs = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            String contentPrestecs = new String(Files.readAllBytes(Paths.get(filePathPrestecs)));
+            JSONArray listaLibros = new JSONArray(content);
+            JSONArray listaPrestecs = new JSONArray(contentPrestecs);
+
+            boolean librosFinded = false; 
+            int maxTitol = 0;
+            int maxAutor = 0;
+            int maxIdLibro = 0;
+            int maxIdPrestamo = 0;
+
+            //Encabezado
+            for (int i = 0; i < listaLibros.length(); i++) {
+
+                JSONObject libro = listaLibros.getJSONObject(i);
+                int libroId = libro.getInt("id");
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+                String idText = String.valueOf(libroId);
+
+                maxTitol = Math.max(maxTitol, titol.length());
+                maxAutor = Math.max(maxAutor, autor.length());
+                maxIdLibro = Math.max(maxIdLibro, idText.length());
+            }
+
+            System.out.println("=====================================================================");
+            System.out.println("TITOL"+" ".repeat(maxTitol) + "| AUTOR"+" ".repeat(maxAutor) + " | ID LLIBRE" +" ".repeat(maxIdLibro) + " | ID PRESTEC");
+            System.out.println("-".repeat(maxTitol+maxAutor+maxIdLibro+maxIdPrestamo + 4));
+
+            //Contenido de las columnas
+            for (int i = 0; i < listaLibros.length(); i++) {
+                JSONObject libro = listaLibros.getJSONObject(i);
+                int libroId = libro.getInt("id");
+                String titol = libro.getString("titol");
+                String autor = libro.getString("autor");
+                String idText = String.valueOf(libroId);
+
+                maxTitol = Math.max(maxTitol, titol.length());
+                maxAutor = Math.max(maxAutor, autor.length());
+                maxIdLibro = Math.max(maxIdLibro, idText.length());
+
+                for (int j = 0; j < listaPrestecs.length(); j++){
+
+                    JSONObject prestamo = listaPrestecs.getJSONObject(j);
+                    int idPrestec = prestamo.getInt("id");
+                    String idPrestecText = String.valueOf(idPrestec);
+                    int prestamoIdLibro = prestamo.getInt("idLlibre");
+                    String prestamoIdLibroText = String.valueOf(prestamoIdLibro);
+                    
+
+                    if (libroId == prestamoIdLibro) {
+                        librosFinded = true;
+                        System.out.println(libro.getString("titol"));
+                    }
+                }
+
+            }
+
+            if (!librosFinded) {
+                System.out.println("No se han encontrado libros en valor de 'prestado'");
+            }
+         } catch (Exception e) {
+            System.out.println("Erros al filtrar libros por prestamos: "+ e.getMessage());
+         }
+    }
+
     public static void filterBooksByAutor (Scanner scanner){
         /*
          * Esta función es la que permite el filtrado de todos los libros por autor y despues listarlos
@@ -407,9 +483,7 @@ public class functions {
             JSONArray listaLibros = new JSONArray(content);
 
             boolean librosFinded = false;
-            int maxBook = 0;
     
-
             System.out.println("Seleccione una Autor para filtrar sus libros: [DEBE INTRODUCIR EL AUTOR EN FORMATO 'Camel']");
             String filterAutor = scanner.nextLine();
 
