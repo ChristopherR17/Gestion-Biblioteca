@@ -407,12 +407,14 @@ public class functions {
             JSONArray listaLibros = new JSONArray(content);
 
             boolean librosFinded = false;
+            int maxBook = 0;
+    
 
             System.out.println("Seleccione una Autor para filtrar sus libros: [DEBE INTRODUCIR EL AUTOR EN FORMATO 'Camel']");
             String filterAutor = scanner.nextLine();
 
             //Encabezado
-            System.out.println("=".repeat(filterAutor.length()+8));
+            System.out.println("=====================================================================");
             System.out.println("Autor/a: " + filterAutor);
             System.out.println("-".repeat(filterAutor.length()+8));
 
@@ -422,7 +424,7 @@ public class functions {
                 String autor = libro.getString("autor");
 
                 if (autor.equals(filterAutor)) {
-                    System.out.println(libro.getString("titol"));
+                    System.out.println(libro.getString("titol")+" || ID del llibre: " + libro.getInt("id"));
                     librosFinded = true;
                 }
             }
@@ -464,7 +466,7 @@ public class functions {
                 String titulo = libro.getString("titol").toLowerCase();
 
                 if(titulo.contains(filterWord)){
-                    System.out.println(titulo.toUpperCase());
+                    System.out.println(titulo.toUpperCase() + "|| ID del llibre: "+libro.getInt("id"));
                     librosFinded = true;
                 }
             }
