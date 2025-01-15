@@ -153,7 +153,6 @@ public class functions {
             }
         }
     }
-    
 
     public static void menuPrestecs(Scanner scanner){
         System.out.println("==========================================================================");
@@ -198,10 +197,10 @@ public class functions {
             if (optionPrestecs.equals("todos") || optionPrestecs.equals("1")) {
                 filterPrestecs(scanner);
                 break;
-            } else if (optionPrestecs.equals("prestamos activos") || optionPrestecs.equals("2")){
+            } else if (optionPrestecs.equals("prestecs d'un usuari") || optionPrestecs.equals("2")){
                 filterPrestecsByUser(scanner);
                 break;
-            } else if (optionPrestecs.equals("prestamos finalizados") || optionPrestecs.equals("3")){
+            } else if (optionPrestecs.equals("") || optionPrestecs.equals("3")){
                 break;
             } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
                 menuPrestecs(scanner);
