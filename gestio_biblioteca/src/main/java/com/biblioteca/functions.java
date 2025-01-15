@@ -83,11 +83,11 @@ public class functions {
                 break;
 
             } else if (optionUsers.equals("eliminar") || optionUsers.equals("3")){
-                menUsersFilter(scanner);
+                eliminarUsuario(scanner);
                 break;
 
             } else if (optionUsers.equals("llistar") || optionUsers.equals("4")){
-                llistarUsuaris(scanner);
+                menUsersFilter(scanner);
                 break;
 
             } else if (optionUsers.equals("menu") || optionUsers.equals("0")){
@@ -120,9 +120,9 @@ public class functions {
                 menUsers(scanner);
                 break;
             }
-            }
         }
     }
+    
 
     public static void menuPrestecs(Scanner scanner){
         System.out.println("=====================================================================");
