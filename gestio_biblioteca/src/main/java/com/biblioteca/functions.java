@@ -114,6 +114,7 @@ public class functions {
                 break;
             } else if (optionUsers.equals("prestamos activos") || optionUsers.equals("2")){
                 filterUserByPrestecsActius(scanner);
+                break;
             } else if (optionUsers.equals("prestamos finalizados") || optionUsers.equals("3")){
                 break;
             } else if (optionUsers.equals("menu") || optionUsers.equals("0")){
@@ -918,7 +919,6 @@ public class functions {
         }
     }
     
-
     public static boolean verificarId(String filePath, int id) throws IOException {
         //Sirve para verificar si la id se encuentra en el archivo json.
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
