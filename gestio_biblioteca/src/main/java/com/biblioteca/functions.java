@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.print.DocFlavor.STRING;
-
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +17,7 @@ import org.json.JSONException;
 public class functions {
     //Funciones de estetica de menu
     public static void menu (){
-        System.out.println("=====================================================================");
+        System.out.println("==========================================================================");
         System.out.println("Gestió de bilioteca");
         System.out.println("1. Llibres");
         System.err.println("2. Usuaris");
@@ -28,7 +26,7 @@ public class functions {
     }
     
     public static void menuBooks (Scanner scanner){
-        System.out.println("=====================================================================");
+        System.out.println("==========================================================================");
         System.out.println("Gestió de llibres");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -63,8 +61,39 @@ public class functions {
         
     }
 
+    public static void menuListBooks (Scanner scanner){
+        System.out.println("==========================================================================");
+        System.out.println("Llistar llibres");
+        System.out.println("1. Tots");
+        System.out.println("2. En préstec");
+        System.out.println("3. Per autor");
+        System.out.println("4. Cercar títol");
+        System.out.println("0. Tornar al menú de llibres ['menu llibres']");
+
+        String listBooksBy = scanner.nextLine().toLowerCase();
+        while (true) {
+            if (listBooksBy.equals("tots") || listBooksBy.equals("1")){
+                filterBooks(scanner);
+                break;
+            } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
+                filterBooksPrestados(scanner);
+                break;
+            } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
+                filterBooksByAutor(scanner);
+                break;
+            } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
+                filterByWordsInTitle(scanner);
+                break;
+            } else if (listBooksBy.equals("menu llibres") || listBooksBy.equals("0")){
+                menuBooks(scanner);
+                break;
+            }
+
+        }
+    }
+
     public static void menUsers(Scanner scanner){
-        System.out.println("=====================================================================");
+        System.out.println("==========================================================================");
         System.out.println("Gestió d'usuaris");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -100,7 +129,7 @@ public class functions {
     }
 
     public static void menUsersFilter (Scanner scanner){
-        System.out.println("=====================================================================");
+        System.out.println("==========================================================================");
         System.out.println("Filtros de usuario");
         System.out.println("1. Todos");
         System.out.println("2. Prestamos Activos");
@@ -127,7 +156,7 @@ public class functions {
     
 
     public static void menuPrestecs(Scanner scanner){
-        System.out.println("=====================================================================");
+        System.out.println("==========================================================================");
         System.out.println("Gestió dels préstecs");
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
@@ -146,7 +175,7 @@ public class functions {
                 deletePrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("4")){
-                filterPrestecs(scanner);
+                menuListPrestecs(scanner);
                 break;
             } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
                 menu();
@@ -156,34 +185,28 @@ public class functions {
         }
     }
 
-    public static void menuListBooks (Scanner scanner){
-        System.out.println("=====================================================================");
-        System.out.println("Llistar llibres");
-        System.out.println("1. Tots");
-        System.out.println("2. En préstec");
-        System.out.println("3. Per autor");
-        System.out.println("4. Cercar títol");
-        System.out.println("0. Tornar al menú de llibres ['menu llibres']");
+    public static void menuListPrestecs(Scanner scanner){
+        System.out.println("==========================================================================");
+        System.out.println("Filtros de prestecs");
+        System.out.println("1. Todos");
+        System.out.println("2. Préstecs d'un usuari");
+        System.out.println("3. "); 
+        System.out.println("0. Tornar al menú prestecs ['menu']");
 
-        String listBooksBy = scanner.nextLine().toLowerCase();
+        String optionPrestecs = scanner.nextLine().toLowerCase();
         while (true) {
-            if (listBooksBy.equals("tots") || listBooksBy.equals("1")){
-                filterBooks(scanner);
+            if (optionPrestecs.equals("todos") || optionPrestecs.equals("1")) {
+                filterPrestecs(scanner);
                 break;
-            } else if (listBooksBy.equals("en prestec") || listBooksBy.equals("2")){
-                filterBooksPrestados(scanner);
+            } else if (optionPrestecs.equals("prestamos activos") || optionPrestecs.equals("2")){
+                filterPrestecsByUser(scanner);
                 break;
-            } else if (listBooksBy.equals("per autor") || listBooksBy.equals("3")){
-                filterBooksByAutor(scanner);
+            } else if (optionPrestecs.equals("prestamos finalizados") || optionPrestecs.equals("3")){
                 break;
-            } else if (listBooksBy.equals("cercar titol") || listBooksBy.equals("4")){
-                filterByWordsInTitle(scanner);
-                break;
-            } else if (listBooksBy.equals("menu llibres") || listBooksBy.equals("0")){
-                menuBooks(scanner);
+            } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
+                menuPrestecs(scanner);
                 break;
             }
-
         }
     }
 
@@ -224,7 +247,7 @@ public class functions {
             JSONArray llibresArray = new JSONArray(content);
 
             int id = automaticID(llibresArray);
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("L'ID d'aquest llibre és: " + id);
 
             String titol;
@@ -273,7 +296,7 @@ public class functions {
 
             JSONArray llibresArray = new JSONArray(content);
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Introdueix l'ID del llibre que vols modificar: ");
             int id = scanner.nextInt();
             //Sirve para limpiar el buffer
@@ -331,7 +354,7 @@ public class functions {
     
             JSONArray llibresArray = new JSONArray(content);
             
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Introdueix l'ID del llibre que vols eliminar: ");
             int id = scanner.nextInt();
             //Sirve para limpiar el buffer
@@ -396,7 +419,7 @@ public class functions {
                 
             }
             
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Titol" + " ".repeat(maxTitulo - 4) + "| Autor" +" ".repeat(maxAutor - 4)+ "| Id Llibre");
             System.out.println("-".repeat(maxTitulo) + "---" + "-".repeat(maxAutor) + "---" + "-".repeat(9));
 
@@ -458,7 +481,7 @@ public class functions {
                 maxIdPrestamo = Math.max(maxIdPrestamo, idPrestecText.length());
             }
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("TITOL" + " ".repeat(Math.max(0, maxTitol - 5)) + " | " + "AUTOR" + " ".repeat(Math.max(0, maxAutor - 5)) + " | " + "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLibro - 8)) + " | " + "ID PRESTEC");
             System.out.println("-".repeat(maxTitol + maxAutor + maxIdLibro + maxIdPrestamo + 29));
 
@@ -519,7 +542,7 @@ public class functions {
             String filterAutor = scanner.nextLine();
 
             //Encabezado
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Autor/a: " + filterAutor);
             System.out.println("-".repeat(filterAutor.length()+8));
 
@@ -624,7 +647,7 @@ public class functions {
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             JSONArray jsonArray = new JSONArray(content);
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Introdueix el nom: ");
             String nom = scanner.nextLine();
 
@@ -831,7 +854,7 @@ public class functions {
 
             }
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 5)+" | Telefon"  + "  | Id "); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
             System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9) + "---"+"-".repeat(maxId + 2));
 
@@ -884,7 +907,7 @@ public class functions {
             }
     
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("ID USUARI" + " | " + "ID PRESTEC" + " | " + "NOM" + " ".repeat(maxNom - 3) + " | " + "COGNOM" + " ".repeat(maxCognom - 6) + " | " + "TELEFON");
             System.out.println("-".repeat(maxNom + maxCognom + maxTelefon + 41));
     
@@ -948,7 +971,7 @@ public class functions {
             }
     
             
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             //Para el encabezado la unica forma que me dejaba era asi, es el ancho de la columna fijo - la longitud del nombre, apellido, fecha...
             System.out.println("ID USUARI" + " ".repeat(9 - "ID USUARI".length()) + " | " + "ID PRESTEC" + " ".repeat(10 - "ID PRESTEC".length()) + " | " + "NOM" + " ".repeat(maxNom - "NOM".length()) + " | " + "COGNOM" + " ".repeat(maxCognom - "COGNOM".length()) + " | " +
                                 "TELEFON" + " ".repeat(9 - "TELEFON".length()) + " | " + "DATA INICI" + " ".repeat(10 - "DATA INICI".length()) + " | " + "DATA FINAL");
@@ -1049,7 +1072,7 @@ public class functions {
 
             JSONArray prestecsArray = new JSONArray(content);
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
 
@@ -1124,7 +1147,7 @@ public class functions {
 
             JSONArray prestecsArray = new JSONArray(content);
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Introdueix l'ID del préstec que vols eliminar: ");
             int idPrestec = scanner.nextInt();
 
@@ -1151,7 +1174,6 @@ public class functions {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
-
 
     public static void filterPrestecs (Scanner scanner){
         /*
@@ -1189,7 +1211,7 @@ public class functions {
                 maxDataDevolucio = Math.max(maxDataDevolucio, dataDevolucio.length());
             }
 
-            System.out.println("=====================================================================");
+            System.out.println("==========================================================================");
             System.out.println("Id" + " ".repeat(maxId - 2) + "| Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
             System.out.println("-".repeat(maxId) + "---" +"-".repeat(maxDataPrestec) + "---" +"-".repeat(maxDataDevolucio)); //Separadores
 
@@ -1212,4 +1234,90 @@ public class functions {
             System.out.println("Error al filtrar los prestamos: "+ e.getMessage());
         }
     }
+
+    public static void filterPrestecsByUser(Scanner scanner) {
+        /*
+         * Esta función muestra todos los préstamos de un usuario específico.
+         */
+        try {
+            String prestecsPath = "./JSON/prestecs.json";
+            String llibresPath = "./JSON/llibres.json";
+            String usuarisPath = "./JSON/usuaris.json";
+            
+            JSONArray prestecs = new JSONArray(new String(Files.readAllBytes(Paths.get(prestecsPath))));
+            JSONArray llibres = new JSONArray(new String(Files.readAllBytes(Paths.get(llibresPath))));
+            JSONArray usuaris = new JSONArray(new String(Files.readAllBytes(Paths.get(usuarisPath))));
+    
+            System.out.println("==========================================================================");
+            System.out.println("Introdueix l'ID de l'usuari: ");
+            int userId = scanner.nextInt();
+            // Limpiar buffer
+            scanner.nextLine(); 
+    
+            // Verificar si el usuario existe
+            boolean usuarioExiste = false;
+            String nombreUsuario = "";
+            String apellidoUsuario = "";
+    
+            for (int i = 0; i < usuaris.length(); i++) {
+                JSONObject usuario = usuaris.getJSONObject(i);
+                if (usuario.getInt("id") == userId) {
+                    usuarioExiste = true;
+                    nombreUsuario = usuario.getString("nom");
+                    apellidoUsuario = usuario.getString("cognom");
+                    break;
+                }
+            }
+    
+            if (!usuarioExiste) {
+                System.out.println("Error: No existeix cap usuari amb aquesta ID.");
+                return;
+            }
+    
+            System.out.println("Préstecs de l'usuari: " + nombreUsuario + " " + apellidoUsuario);
+            System.out.println("--------------------------------------------------------------------------");
+            System.out.println("ID Préstec | Títol del llibre             | Data Préstec | Data Devolució");
+            System.out.println("--------------------------------------------------------------------------");
+    
+            boolean tienePrestamos = false;
+    
+            // Buscar todos los préstamos del usuario
+            for (int i = 0; i < prestecs.length(); i++) {
+                JSONObject prestec = prestecs.getJSONObject(i);
+                
+                if (prestec.getInt("idUsuari") == userId) {
+                    tienePrestamos = true;
+                    int idPrestec = prestec.getInt("id");
+                    int idLlibre = prestec.getInt("idLlibre");
+                    String dataPrestec = prestec.getString("dataPrestec");
+                    String dataDevolucio = prestec.isNull("dataDevolucio") ? "En préstec" : prestec.getString("dataDevolucio");
+    
+                    // Buscar el título del libro
+                    String titolLlibre = "";
+                    for (int j = 0; j < llibres.length(); j++) {
+                        JSONObject llibre = llibres.getJSONObject(j);
+                        if (llibre.getInt("id") == idLlibre) {
+                            titolLlibre = llibre.getString("titol");
+                            break;
+                        }
+                    }
+    
+                    // Formatear la salida para que quede alineada
+                    System.out.printf("%-10d | %-28s | %-12s | %-14s%n", 
+                        idPrestec, 
+                        titolLlibre.length() > 28 ? titolLlibre.substring(0, 25) + "..." : titolLlibre,
+                        dataPrestec,
+                        dataDevolucio);
+                }
+            }
+    
+            if (!tienePrestamos) {
+                System.out.println("Aquest usuari no té cap préstec registrat.");
+            }
+    
+        } catch (Exception e) {
+            System.out.println("Error al consultar els préstecs: " + e.getMessage());
+        }
+    }
+    
 }

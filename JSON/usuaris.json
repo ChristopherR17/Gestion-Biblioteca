@@ -28,11 +28,5 @@
         "id": 2,
         "nom": "Alejandro",
         "cognom": "Palotes"
-    },
-    {
-        "telefon": 654132798,
-        "id": 6,
-        "nom": "Rosa",
-        "cognom": "Melano"
     }
 ]
