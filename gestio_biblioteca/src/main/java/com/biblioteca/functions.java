@@ -825,6 +825,75 @@ public class functions {
          }
     }
 
+    public static void filterUserByPrestecsActius(Scanner scanner) {
+
+        /*
+         * Esta función muestra todos los usuarios con préstamos activos.
+         * Mostraremos el ID del usuario, el ID del préstamo, el nombre del usuario (claves "nom" y "cognom")
+         * y el teléfono del usuario.
+         * Se mostraran aquellos usuarios con dataDevolucio = Null; 
+         */
+    
+        try {
+
+            String filePath = "./JSON/usuaris.json";
+            String filePathPrestecs = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            String contentPrestecs = new String(Files.readAllBytes(Paths.get(filePathPrestecs)));
+            JSONArray listaUsuaris = new JSONArray(content);
+            JSONArray listaPrestecs = new JSONArray(contentPrestecs);
+    
+            boolean usuariosFinded = false;
+            int maxNom = 0;
+            int maxCognom = 0;
+            int maxTelefon = 0;
+    
+            //ENCABEZADO
+            for (int i = 0; i < listaUsuaris.length(); i++) {
+                JSONObject usuari = listaUsuaris.getJSONObject(i);
+                maxNom = Math.max(maxNom, usuari.getString("nom").length());
+                maxCognom = Math.max(maxCognom, usuari.getString("cognom").length());
+                maxTelefon = Math.max(maxTelefon, String.valueOf(usuari.getInt("telefon")).length());
+            }
+    
+
+            System.out.println("=".repeat(maxNom + maxCognom + maxTelefon + 25));
+            System.out.println("ID USUARI" + " | " + "ID PRESTEC" + " | " + "NOM" + " ".repeat(maxNom - 3) + " | " + "COGNOM" + " ".repeat(maxCognom - 6) + " | " + "TELEFON");
+            System.out.println("-".repeat(maxNom + maxCognom + maxTelefon + 25));
+    
+            //Contenido de las columnas
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                JSONObject prestamo = listaPrestecs.getJSONObject(i);
+                if (prestamo.isNull("dataDevolucio")) { 
+                    int idUsuariPrestamo = prestamo.getInt("idUsuari");
+                    int idPrestec = prestamo.getInt("id");
+            
+                    for (int j = 0; j < listaUsuaris.length(); j++) {
+                        JSONObject usuari = listaUsuaris.getJSONObject(j);
+                        if (usuari.getInt("id") == idUsuariPrestamo) {
+
+                            usuariosFinded = true;
+                            int idUsuari = usuari.getInt("id");
+                            int telefon = usuari.getInt("telefon");
+                            String nom = usuari.getString("nom");
+                            String cognom = usuari.getString("cognom");
+
+                            System.out.println(idUsuari + " ".repeat(9 - String.valueOf(idUsuari).length()) + " | " + idPrestec + " ".repeat(10 - String.valueOf(idPrestec).length()) + " | " + nom + " ".repeat(maxNom - nom.length()) + " | " + cognom + " ".repeat(maxCognom - cognom.length()) + " | " + telefon);
+                        }
+                    }
+                }
+            }
+            
+            if (!usuariosFinded) {
+                System.out.println("No se han encontrado usuarios con préstamos activos.");
+            }
+    
+        } catch (Exception e) {
+            System.out.println("Error al cargar usuarios: " + e.getMessage());
+        }
+    }
+    
+
     public static boolean verificarId(String filePath, int id) throws IOException {
         //Sirve para verificar si la id se encuentra en el archivo json.
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
