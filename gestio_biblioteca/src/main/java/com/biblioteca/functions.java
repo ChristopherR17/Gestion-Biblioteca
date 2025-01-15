@@ -451,10 +451,7 @@ public class functions {
 
                     JSONObject prestamo = listaPrestecs.getJSONObject(j);
                     int idPrestec = prestamo.getInt("id");
-                    String idPrestecText = String.valueOf(idPrestec);
                     int prestamoIdLibro = prestamo.getInt("idLlibre");
-                    String prestamoIdLibroText = String.valueOf(prestamoIdLibro);
-                    
 
                     if (libroId == prestamoIdLibro) {
                         librosFinded = true;
