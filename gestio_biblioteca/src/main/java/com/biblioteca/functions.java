@@ -424,9 +424,16 @@ public class functions {
                 maxIdLibro = Math.max(maxIdLibro, idText.length());
             }
 
+            for (int j = 0; j < listaPrestecs.length(); j++) {
+
+                JSONObject prestamo = listaPrestecs.getJSONObject(j);
+                String idPrestecText = String.valueOf(prestamo.getInt("id"));
+                maxIdPrestamo = Math.max(maxIdPrestamo, idPrestecText.length());
+            }
+
             System.out.println("=====================================================================");
-            System.out.println("TITOL"+" ".repeat(maxTitol) + "| AUTOR"+" ".repeat(maxAutor) + " | ID LLIBRE" +" ".repeat(maxIdLibro) + " | ID PRESTEC");
-            System.out.println("-".repeat(maxTitol+maxAutor+maxIdLibro+maxIdPrestamo + 4));
+            System.out.println("TITOL" + " ".repeat(Math.max(0, maxTitol - 5)) + " | " + "AUTOR" + " ".repeat(Math.max(0, maxAutor - 5)) + " | " + "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLibro - 8)) + " | " + "ID PRESTEC");
+            System.out.println("-".repeat(maxTitol + maxAutor + maxIdLibro + maxIdPrestamo + 29));
 
             //Contenido de las columnas
             for (int i = 0; i < listaLibros.length(); i++) {
@@ -451,7 +458,7 @@ public class functions {
 
                     if (libroId == prestamoIdLibro) {
                         librosFinded = true;
-                        System.out.println(libro.getString("titol"));
+                        System.out.println(titol + " ".repeat(maxTitol - titol.length()) + " | " + autor + " ".repeat(maxAutor - autor.length()) + " | " + libroId + " ".repeat(8) + " | " + idPrestec);
                     }
                 }
 
