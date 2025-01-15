@@ -83,7 +83,7 @@ public class functions {
                 break;
 
             } else if (optionUsers.equals("eliminar") || optionUsers.equals("3")){
-                eliminarUsuario(scanner);
+                menUsersFilter(scanner);
                 break;
 
             } else if (optionUsers.equals("llistar") || optionUsers.equals("4")){
@@ -97,6 +97,31 @@ public class functions {
 
         }
 
+    }
+
+    public static void menUsersFilter (Scanner scanner){
+        System.out.println("=====================================================================");
+        System.out.println("Filtros de usuario");
+        System.out.println("1. Todos");
+        System.out.println("2. Prestamos Activos");
+        System.out.println("3. Prestamos Finalizados"); 
+        System.out.println("0. Tornar el menú usuaris ['menu']");
+
+        String optionUsers = scanner.nextLine().toLowerCase();
+        while (true) {
+            if (optionUsers.equals("todos") || optionUsers.equals("1")) {
+                llistarUsuaris(scanner);
+                break;
+            } else if (optionUsers.equals("prestamos activos") || optionUsers.equals("2")){
+                filterUserByPrestecsActius(scanner);
+            } else if (optionUsers.equals("prestamos finalizados") || optionUsers.equals("3")){
+                break;
+            } else if (optionUsers.equals("menu") || optionUsers.equals("0")){
+                menUsers(scanner);
+                break;
+            }
+            }
+        }
     }
 
     public static void menuPrestecs(Scanner scanner){
