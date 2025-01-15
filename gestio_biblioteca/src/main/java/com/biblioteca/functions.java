@@ -352,6 +352,7 @@ public class functions {
 
             int maxTitulo = 0;
             int maxAutor = 0;
+            int maxId = 0;
 
             //Iniciamos 'for' para crear el encabezado --> se hace de la misma forma que para filtrar los usuarios
             for (int i = 0; i < listaLibros.length(); i++) {
@@ -359,13 +360,16 @@ public class functions {
                 JSONObject libro = listaLibros.getJSONObject(i);
                 String titol = libro.getString("titol");
                 String autor = libro.getString("autor");
+                int id = libro.getInt("id");
                 maxTitulo = Math.max(maxTitulo, titol.length());
                 maxAutor = Math.max(maxAutor, autor.length());
+                String idText = String.valueOf(id); // Esto pasa el valor de id que es un int lo convierte en String para poder saber su largo
+                maxId = Math.max(maxId, idText.length());
                 
             }
             
             System.out.println("=====================================================================");
-            System.out.println("Titol" + " ".repeat(maxTitulo - 4) + "| Autor");
+            System.out.println("Titol" + " ".repeat(maxTitulo - 4) + "| Autor" +" ".repeat(maxAutor - 4)+ "| Id Llibre");
             System.out.println("-".repeat(maxTitulo) + "---" + "-".repeat(maxAutor) + "---" + "-".repeat(9));
 
             //Iniciamos bucle 'for' para los listar los nombres de los titulos
@@ -375,8 +379,9 @@ public class functions {
                 JSONObject libro = listaLibros.getJSONObject(i);
                 String titol = libro.getString("titol");
                 String autor = libro.getString("autor");
+                int id = libro.getInt("id");
 
-                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor+"s\n", titol, autor);
+                System.out.printf("%-" + maxTitulo + "s | %-" + maxAutor + "s | %" + maxId + "d\n", titol, autor, id);
             }
 
          } catch (Exception e) {
