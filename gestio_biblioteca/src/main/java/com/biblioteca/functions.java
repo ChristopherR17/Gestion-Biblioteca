@@ -710,6 +710,7 @@ public class functions {
             
             int maxNombre = 0;
             int maxApellido = 0;
+            int maxId = 0;
             
             //Este "for" es para el encabezado
             for (int i = 0; i < listaUsuarios.length(); i++) {
@@ -719,12 +720,15 @@ public class functions {
                 String apellido = usuario.getString("cognom");
                 maxNombre = Math.max(maxNombre, nombre.length());//Esto compara cual de los 2 es mas largo
                 maxApellido = Math.max(maxApellido, apellido.length());
+                int id = usuario.getInt("id");
+                String idText = String.valueOf(id);
+                maxId = Math.max(maxId, idText.length());
 
             }
 
             System.out.println("=====================================================================");
-            System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 6)+" | Telefon"); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
-            System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9));
+            System.out.println("Nom" + " ".repeat(maxNombre - 3) + " | Cognom"+" ".repeat(maxApellido - 5)+" | Telefon"  + "  | Id "); // El -3/-6...  es para el espacio que hay entre la barra y el apellido
+            System.out.println("-".repeat(maxNombre) + "---" + "-".repeat(maxApellido) + "---" + "-".repeat(9) + "---"+"-".repeat(maxId + 2));
 
             //Este "for" es para los nombres
             for (int i = 0; i < listaUsuarios.length(); i++) {
@@ -732,8 +736,9 @@ public class functions {
                 String nombre = usuario.getString("nom");
                 String apellido = usuario.getString("cognom");
                 int telefono = usuario.getInt("telefon");
+                int id = usuario.getInt("id");
 
-                System.out.printf("%-" + maxNombre + "s | %-" + maxApellido + "s | %s%n", nombre, apellido, telefono);
+                System.out.printf("%-" + maxNombre + "s | %-" + maxApellido + "s | %-9d | %" + maxId + "d\n", nombre, apellido, telefono, id);
 
             }
          
