@@ -116,6 +116,7 @@ public class functions {
                 filterUserByPrestecsActius(scanner);
                 break;
             } else if (optionUsers.equals("prestamos finalizados") || optionUsers.equals("3")){
+                filterUsersByPrestecsFinalizados(scanner);
                 break;
             } else if (optionUsers.equals("menu") || optionUsers.equals("0")){
                 menUsers(scanner);
@@ -883,9 +884,9 @@ public class functions {
             }
     
 
-            System.out.println("=".repeat(maxNom + maxCognom + maxTelefon + 25));
+            System.out.println("=====================================================================");
             System.out.println("ID USUARI" + " | " + "ID PRESTEC" + " | " + "NOM" + " ".repeat(maxNom - 3) + " | " + "COGNOM" + " ".repeat(maxCognom - 6) + " | " + "TELEFON");
-            System.out.println("-".repeat(maxNom + maxCognom + maxTelefon + 25));
+            System.out.println("-".repeat(maxNom + maxCognom + maxTelefon + 41));
     
             //Contenido de las columnas
             for (int i = 0; i < listaPrestecs.length(); i++) {
@@ -912,6 +913,79 @@ public class functions {
             
             if (!usuariosFinded) {
                 System.out.println("No se han encontrado usuarios con préstamos activos.");
+            }
+    
+        } catch (Exception e) {
+            System.out.println("Error al cargar usuarios: " + e.getMessage());
+        }
+    }
+
+    public static void filterUsersByPrestecsFinalizados(Scanner scanner) {
+        /*
+         * Esta función muestra todos los usuarios con préstamos finalizados.
+         * Mostramos el ID del usuario, el ID del préstamo, el nombre del usuario (claves "nom" y "cognom"), el teléfono, y las fechas de inicio y finalización.
+         */
+    
+        try {
+            String filePath = "./JSON/usuaris.json";
+            String filePathPrestecs = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            String contentPrestecs = new String(Files.readAllBytes(Paths.get(filePathPrestecs)));
+            JSONArray listaUsuaris = new JSONArray(content);
+            JSONArray listaPrestecs = new JSONArray(contentPrestecs);
+    
+            boolean usuariosFinded = false;
+            int maxNom = 0;
+            int maxCognom = 0;
+            int maxTelefon = 0;
+    
+            //Encabezado
+            for (int i = 0; i < listaUsuaris.length(); i++) {
+                JSONObject usuari = listaUsuaris.getJSONObject(i);
+                maxNom = Math.max(maxNom, usuari.getString("nom").length());
+                maxCognom = Math.max(maxCognom, usuari.getString("cognom").length());
+                maxTelefon = Math.max(maxTelefon, String.valueOf(usuari.getInt("telefon")).length());
+            }
+    
+            
+            System.out.println("=====================================================================");
+            //Para el encabezado la unica forma que me dejaba era asi, es el ancho de la columna fijo - la longitud del nombre, apellido, fecha...
+            System.out.println("ID USUARI" + " ".repeat(9 - "ID USUARI".length()) + " | " + "ID PRESTEC" + " ".repeat(10 - "ID PRESTEC".length()) + " | " + "NOM" + " ".repeat(maxNom - "NOM".length()) + " | " + "COGNOM" + " ".repeat(maxCognom - "COGNOM".length()) + " | " +
+                                "TELEFON" + " ".repeat(9 - "TELEFON".length()) + " | " + "DATA INICI" + " ".repeat(10 - "DATA INICI".length()) + " | " + "DATA FINAL");
+            System.out.println("-".repeat(maxNom + maxCognom + maxTelefon + 57));
+    
+            //COlumnas
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                JSONObject prestamo = listaPrestecs.getJSONObject(i);
+
+                if (!prestamo.isNull("dataDevolucio")) { 
+
+                    int idUsuariPrestamo = prestamo.getInt("idUsuari");
+                    int idPrestec = prestamo.getInt("id");
+                    String dataInici = prestamo.getString("dataPrestec");
+                    String dataFinal = prestamo.getString("dataDevolucio");
+    
+                    for (int j = 0; j < listaUsuaris.length(); j++) {
+                        JSONObject usuari = listaUsuaris.getJSONObject(j);
+
+                        if (usuari.getInt("id") == idUsuariPrestamo) {
+                            usuariosFinded = true;
+    
+                            int idUsuari = usuari.getInt("id");
+                            int telefon = usuari.getInt("telefon");
+                            String nom = usuari.getString("nom");
+                            String cognom = usuari.getString("cognom");
+    
+                            System.out.println(idUsuari + " ".repeat(9 - String.valueOf(idUsuari).length()) + " | " + idPrestec + " ".repeat(10 - String.valueOf(idPrestec).length()) + " | " + nom + " ".repeat(maxNom - nom.length()) + " | " +
+                                cognom + " ".repeat(maxCognom - cognom.length()) + " | " + telefon + " ".repeat(maxTelefon - String.valueOf(telefon).length()) + " | " + dataInici + " | " + dataFinal
+                            );
+                        }
+                    }
+                }
+            }
+    
+            if (!usuariosFinded) {
+                System.out.println("No se han encontrado usuarios con préstamos finalizados.");
             }
     
         } catch (Exception e) {
