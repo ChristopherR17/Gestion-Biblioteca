@@ -1401,7 +1401,6 @@ public class functions {
             int maxIdUsuari = Math.max(8, "ID USUARI".length());
             boolean findedPrestecs = false;
     
-            // Calcular longitudes máximas para cada columna
             for (int i = 0; i < listaPrestecs.length(); i++) {
                 JSONObject prestec = listaPrestecs.getJSONObject(i);
     
