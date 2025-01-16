@@ -28,13 +28,6 @@
         "idUsuari": 4
     },
     {
-        "dataDevolucio": "2025-01-20",
-        "dataPrestec": "2025-01-13",
-        "idLlibre": 2,
-        "id": 4,
-        "idUsuari": 3
-    },
-    {
         "dataDevolucio": "2025-05-30",
         "dataPrestec": "2025-05-23",
         "idLlibre": 1,
@@ -54,5 +47,12 @@
         "idLlibre": 9,
         "id": 8,
         "idUsuari": 4
+    },
+    {
+        "dataDevolucio": "2024-09-30",
+        "dataPrestec": "2024-09-23",
+        "idLlibre": 4,
+        "id": 9,
+        "idUsuari": 7
     }
 ]

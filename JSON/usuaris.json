@@ -30,9 +30,15 @@
         "cognom": "Palotes"
     },
     {
-        "telefon": 654132798,
+        "telefon": 987987987,
+        "id": 7,
+        "nom": "Lamine",
+        "cognom": "Yamal"
+    },
+    {
+        "telefon": 123123123,
         "id": 6,
-        "nom": "Rosa",
-        "cognom": "Melano"
+        "nom": "Leo",
+        "cognom": "Messi"
     }
 ]

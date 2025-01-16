@@ -1190,7 +1190,7 @@ public class functions {
             }
 
             System.out.println("=====================================================================");
-            System.out.println("Id" + " ".repeat(maxId - 2) + "| Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
+            System.out.println("Id" + " ".repeat(maxId - 2) + " | Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
             System.out.println("-".repeat(maxId) + "---" +"-".repeat(maxDataPrestec) + "---" +"-".repeat(maxDataDevolucio)); //Separadores
 
             //Este for es para el contenido del filtrado

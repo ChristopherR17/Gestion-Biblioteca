@@ -13,5 +13,10 @@
         "titol": "Un monstruo viene a verme",
         "id": 2,
         "autor": "Patrick"
+    },
+    {
+        "titol": "Elantris",
+        "id": 4,
+        "autor": "Brandon Sanderson"
     }
 ]
