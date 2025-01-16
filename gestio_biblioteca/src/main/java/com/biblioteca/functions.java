@@ -160,7 +160,8 @@ public class functions {
         System.out.println("1. Afegir");
         System.out.println("2. Modificar");
         System.out.println("3. Eliminar");
-        System.out.println("4. Llistar"); 
+        System.out.println("4. Terminar prestec"); 
+        System.out.println("5. Llistar"); 
         System.out.println("0. Tornar el menú principal ['menu']");
 
         String optionPrestecs = scanner.nextLine().toLowerCase();
@@ -174,7 +175,10 @@ public class functions {
             } else if (optionPrestecs.equals("eliminar") || optionPrestecs.equals("3")){
                 deletePrestec(scanner);
                 break;
-            } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("4")){
+            } else if (optionPrestecs.equals("terminar prestec") || optionPrestecs.equals("4")){
+                endPrestec(scanner);
+                break;
+            } else if (optionPrestecs.equals("llistar") || optionPrestecs.equals("5")){
                 menuListPrestecs(scanner);
                 break;
             } else if (optionPrestecs.equals("menu") || optionPrestecs.equals("0")){
@@ -1146,57 +1150,56 @@ public class functions {
         }
     }
 
-    public static void modifyPrestec(Scanner scanner){
+    public static void modifyPrestec(Scanner scanner) {
         /*
-         * Funcion para modificar los prestamos en el json
+         * Función para modificar los préstamos en el JSON.
+         * Solo aparecen para modificar los préstamos que no han finalizado.
          */
         try {
             String prestecPath = "./JSON/prestecs.json";
             String llibresPath = "./JSON/llibres.json";
             String content = new String(Files.readAllBytes(Paths.get(prestecPath)));
-
-            JSONArray prestecsArray = new JSONArray(content); 
-
+    
+            JSONArray prestecsArray = new JSONArray(content);
+    
             System.out.println("==========================================================================");
-            System.out.println("Introdueix l'ID del prestec que vols modificar: ");
+            System.out.println("Introdueix l'ID del préstec que vols modificar: ");
             int id = scanner.nextInt();
-            //Sirve para limpiar el buffer
-            scanner.nextLine();
-
+            scanner.nextLine(); // Limpiar el buffer
+    
             JSONObject prestecModificar = null;
             for (int i = 0; i < prestecsArray.length(); i++) {
                 JSONObject prestec = prestecsArray.getJSONObject(i);
-                if (prestec.getInt("id") == id){
+                if (prestec.getInt("id") == id && prestec.isNull("dataDevolucio")) {
                     prestecModificar = prestec;
                     break;
                 }
             }
-
-            if (prestecModificar == null){
-                System.out.println("Error: No s'ha trobat cap llibre amb aquesta ID.");
+    
+            if (prestecModificar == null) {
+                System.out.println("Error: No s'ha trobat cap préstec actiu amb aquesta ID.");
                 return;
             }
-
-            System.out.println("Prestec trobat: ");
+    
+            System.out.println("Préstec trobat: ");
             System.out.println("ID: " + prestecModificar.getInt("id"));
             System.out.println("IdUsuari: " + prestecModificar.getInt("idUsuari"));
             System.out.println("IdLlibre: " + prestecModificar.getInt("idLlibre"));
-            System.out.println("DataPrestec: " + prestecModificar.getString("dataPrestec"));
-            System.out.println("DataDevolució: " + prestecModificar.getString("dataDevolucio"));
-
-            System.out.println("Introdueix l'id del nou llibre que vols (deixa'l buit per mantenir el llibre actual):");
+            System.out.println("DataPréstec: " + prestecModificar.getString("dataPrestec"));
+    
+            System.out.println("Introdueix l'ID del nou llibre que vols (introdueix '0' per mantenir el llibre actual):");
             int nouIdLlibre = scanner.nextInt();
             scanner.nextLine();
-
-            if (!verificarId(llibresPath, nouIdLlibre)) {
+    
+            if (nouIdLlibre != 0 && !verificarId(llibresPath, nouIdLlibre)) {
                 System.out.println("Error: La ID del llibre no existeix.");
                 return;
             }
-            
-            if (nouIdLlibre != prestecModificar.getInt("idLlibre")){
+    
+            if (nouIdLlibre != 0) {
                 prestecModificar.put("idLlibre", nouIdLlibre);
 
-                System.out.println("Introdueix la nova data de prestec(format: yyyy-MM-dd) :");
+                System.out.println("Introdueix la nova data de préstec (format: yyyy-MM-dd) :");
                 String dataPrestecStr = scanner.nextLine();
                 LocalDate novaDataPrestec;
                 try {
@@ -1205,22 +1208,23 @@ public class functions {
                     System.out.println("Error: La data introduïda no té el format correcte.");
                     return;
                 }
-                LocalDate novaDataDevolucio = novaDataPrestec.plusDays(7); 
+        
+                prestecModificar.put("dataPrestec", novaDataPrestec.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-                prestecModificar.put("dataPrestec", novaDataPrestec);
-                prestecModificar.put("dataDevolucio", novaDataDevolucio);
+                Files.write(Paths.get(prestecPath), prestecsArray.toString(4).getBytes());
+    
+                System.out.println("El préstec s'ha modificat correctament.");
             }
-
-            prestecsArray.put(prestecModificar);
-
-            Files.write(Paths.get(prestecPath), prestecsArray.toString(4).getBytes());
-            
+    
+            System.out.println("NO s'ha fet cap canvi.");
+    
         } catch (IOException e) {
             System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
+    
 
     public static void deletePrestec(Scanner scanner) {
         /*
@@ -1235,6 +1239,7 @@ public class functions {
             System.out.println("==========================================================================");
             System.out.println("Introdueix l'ID del préstec que vols eliminar: ");
             int idPrestec = scanner.nextInt();
+            scanner.nextLine();//Limpiar el buffer
 
             boolean prestecEncontrado = false;
             for (int i = 0; i < prestecsArray.length(); i++) {
@@ -1259,6 +1264,51 @@ public class functions {
             System.out.println("Error al processar el JSON: " + e.getMessage());
         }
     }
+
+    public static void endPrestec(Scanner scanner) {
+        /*
+        * Función adicional que sirve para devolver el libro prestado.
+        */
+        try {
+            String prestecPath = "./JSON/prestecs.json";
+            String content = new String(Files.readAllBytes(Paths.get(prestecPath)));
+
+            JSONArray prestecsArray = new JSONArray(content);
+
+            System.out.println("==========================================================================");
+            System.out.println("Introdueix la teva ID: ");
+            int idUsuari = scanner.nextInt();
+
+            System.out.println("Introdueix l'ID del llibre que vols retornar: ");
+            int idLlibre = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer
+
+            boolean prestecEncontrado = false;
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject prestec = prestecsArray.getJSONObject(i);
+
+                if (prestec.getInt("idUsuari") == idUsuari && prestec.getInt("idLlibre") == idLlibre) {
+                    LocalDate dataDevolucio = LocalDate.now();
+                    prestec.put("dataDevolucio", dataDevolucio.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    prestecEncontrado = true;
+                    break;
+                }
+            }
+
+            if (prestecEncontrado) {
+                Files.write(Paths.get(prestecPath), prestecsArray.toString(4).getBytes());
+                System.out.println("El llibre s'ha retornat correctament.");
+            } else {
+                System.out.println("No s'ha trobat cap préstec amb aquesta combinació d'ID d'usuari i ID de llibre.");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }
+
 
     public static void filterPrestecs (Scanner scanner){
         /*
