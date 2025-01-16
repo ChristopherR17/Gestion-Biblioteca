@@ -54,5 +54,12 @@
         "idLlibre": 4,
         "id": 9,
         "idUsuari": 7
+    },
+    {
+        "dataDevolucio": "1998-10-06",
+        "dataPrestec": "1998-09-29",
+        "idLlibre": 5,
+        "id": 4,
+        "idUsuari": 2
     }
 ]
