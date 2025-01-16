@@ -169,6 +169,7 @@ public class functions {
                 addPrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("modificar") || optionPrestecs.equals("2")){
+                modifyPrestec(scanner);
                 break;
             } else if (optionPrestecs.equals("eliminar") || optionPrestecs.equals("3")){
                 deletePrestec(scanner);
@@ -335,6 +336,10 @@ public class functions {
             String nouAutor = scanner.nextLine().trim();
             if (!nouAutor.isEmpty()){
                 llibreModificar.put("autor", nouAutor);
+            }
+
+            if (nouTitol.isEmpty() && nouAutor.isEmpty()){
+                System.out.println("NO s'ha fet cap canvi.");
             }
 
             Files.write(Paths.get(filePath), llibresArray.toString(4).getBytes());
@@ -619,7 +624,6 @@ public class functions {
          * @param llista -> es el JsonArray con el que trabajamos,para obtener despues los valores que queramos.
          * lanza una excepcion para que no pete el code
          */
-
         for (int i = 0; i < llista.length();i++){
             JSONObject user = llista.getJSONObject(i);
             int telefon = user.getInt("telefon");
@@ -644,7 +648,6 @@ public class functions {
          * @param scanner -> valores que pasa el usuario
          */
 
-        
         String filePath = "JSON/usuaris.json";
 
         try {
@@ -652,6 +655,9 @@ public class functions {
             JSONArray jsonArray = new JSONArray(content);
 
             System.out.println("==========================================================================");
+            int id = automaticID(jsonArray); // Utilizamos la funcion automaticID() para generar una ID
+            System.out.println("L'ID d'aquest usuari és: " + id);
+
             System.out.println("Introdueix el nom: ");
             String nom = scanner.nextLine();
 
@@ -660,11 +666,11 @@ public class functions {
 
             System.out.println("Introdueix el numero de telefon: ");
             int telefon = scanner.nextInt();
+            scanner.nextLine(); //Para limpiar el buffer
 
             comprobarLlongitud(telefon); // LLamamos a las funciones anteriores para comprobar que sea correcto
             comprobarTelefon(telefon, jsonArray);
 
-            int id = automaticID(jsonArray); // Utilizamos la funcion automaticID() para generar una ID
             JSONObject usuari = new JSONObject(); // Creamos un objeto nuevo para poner los valores pasados
             usuari.put("id", id);
             usuari.put("nom", nom);
@@ -672,11 +678,10 @@ public class functions {
             usuari.put("telefon", telefon);
 
             jsonArray.put(usuari);
-            PrintWriter out = new PrintWriter(filePath);
-            out.write(jsonArray.toString(4)); // Escribimos el json(el 4 es puramente visual para verlo nosotros mejor rollo lo pone por lineas en vez de todo apelotonado)
-            out.flush();
-            out.close();  //con estos dos (flush y close) cerramos el json
-            System.out.println("Usuari afegit");
+
+            Files.write(Paths.get(filePath), jsonArray.toString(4).getBytes()); // Escribimos el json(el 4 es puramente visual para verlo nosotros mejor rollo lo pone por lineas en vez de todo apelotonado)
+
+            System.out.println("Usuari afegit!");
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
@@ -1020,6 +1025,7 @@ public class functions {
         }
     }
     
+    //PRESTECS
     public static boolean verificarId(String filePath, int id) throws IOException {
         //Sirve para verificar si la id se encuentra en el archivo json.
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -1057,7 +1063,6 @@ public class functions {
         return false;
     }
 
-    //PRESTECS
     public static void addPrestec(Scanner scanner){
         /*
         * Función que permite añadir un nuevo préstamo de un libro a un usuario.
@@ -1077,6 +1082,9 @@ public class functions {
             JSONArray prestecsArray = new JSONArray(content);
 
             System.out.println("==========================================================================");
+            int id = automaticID(prestecsArray);
+            System.out.println("L'ID d'aquest prestec és: " + id);
+
             System.out.println("Introdueix la teva ID(la del usuari): ");
             int idUsuari = scanner.nextInt();
 
@@ -1117,16 +1125,13 @@ public class functions {
                 System.out.println("Error: La data introduïda no té el format correcte.");
                 return;
             }
-            LocalDate dataDevolucio = dataPrestec.plusDays(7); 
-
-            int id = automaticID(prestecsArray);
 
             JSONObject nouPrestec = new JSONObject();
             nouPrestec.put("id", id);
             nouPrestec.put("idLlibre", idLlibre);
             nouPrestec.put("idUsuari", idUsuari);
             nouPrestec.put("dataPrestec", dataPrestec);
-            nouPrestec.put("dataDevolucio", dataDevolucio.toString());
+            nouPrestec.put("dataDevolucio", JSONObject.NULL);
 
             prestecsArray.put(nouPrestec);
 
@@ -1134,6 +1139,82 @@ public class functions {
 
             System.out.println("Préstec afegit correctament. Tens 7 dies per retornar el llibre.");
 
+        } catch (IOException e) {
+            System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
+        } catch (JSONException e) {
+            System.out.println("Error al processar el JSON: " + e.getMessage());
+        }
+    }
+
+    public static void modifyPrestec(Scanner scanner){
+        /*
+         * Funcion para modificar los prestamos en el json
+         */
+        try {
+            String prestecPath = "./JSON/prestecs.json";
+            String llibresPath = "./JSON/llibres.json";
+            String content = new String(Files.readAllBytes(Paths.get(prestecPath)));
+
+            JSONArray prestecsArray = new JSONArray(content); 
+
+            System.out.println("==========================================================================");
+            System.out.println("Introdueix l'ID del prestec que vols modificar: ");
+            int id = scanner.nextInt();
+            //Sirve para limpiar el buffer
+            scanner.nextLine();
+
+            JSONObject prestecModificar = null;
+            for (int i = 0; i < prestecsArray.length(); i++) {
+                JSONObject prestec = prestecsArray.getJSONObject(i);
+                if (prestec.getInt("id") == id){
+                    prestecModificar = prestec;
+                    break;
+                }
+            }
+
+            if (prestecModificar == null){
+                System.out.println("Error: No s'ha trobat cap llibre amb aquesta ID.");
+                return;
+            }
+
+            System.out.println("Prestec trobat: ");
+            System.out.println("ID: " + prestecModificar.getInt("id"));
+            System.out.println("IdUsuari: " + prestecModificar.getInt("idUsuari"));
+            System.out.println("IdLlibre: " + prestecModificar.getInt("idLlibre"));
+            System.out.println("DataPrestec: " + prestecModificar.getString("dataPrestec"));
+            System.out.println("DataDevolució: " + prestecModificar.getString("dataDevolucio"));
+
+            System.out.println("Introdueix l'id del nou llibre que vols (deixa'l buit per mantenir el llibre actual):");
+            int nouIdLlibre = scanner.nextInt();
+            scanner.nextLine();
+
+            if (!verificarId(llibresPath, nouIdLlibre)) {
+                System.out.println("Error: La ID del llibre no existeix.");
+                return;
+            }
+            
+            if (nouIdLlibre != prestecModificar.getInt("idLlibre")){
+                prestecModificar.put("idLlibre", nouIdLlibre);
+
+                System.out.println("Introdueix la nova data de prestec(format: yyyy-MM-dd) :");
+                String dataPrestecStr = scanner.nextLine();
+                LocalDate novaDataPrestec;
+                try {
+                    novaDataPrestec = LocalDate.parse(dataPrestecStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                } catch (DateTimeParseException e) {
+                    System.out.println("Error: La data introduïda no té el format correcte.");
+                    return;
+                }
+                LocalDate novaDataDevolucio = novaDataPrestec.plusDays(7); 
+
+                prestecModificar.put("dataPrestec", novaDataPrestec);
+                prestecModificar.put("dataDevolucio", novaDataDevolucio);
+            }
+
+            prestecsArray.put(prestecModificar);
+
+            Files.write(Paths.get(prestecPath), prestecsArray.toString(4).getBytes());
+            
         } catch (IOException e) {
             System.out.println("Error al llegir/escriure l'arxiu: " + e.getMessage());
         } catch (JSONException e) {

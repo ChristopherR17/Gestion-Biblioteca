@@ -1,37 +1,9 @@
 [
     {
-        "dataDevolucio": null,
-        "dataPrestec": "2025-01-12",
-        "idLlibre": 1,
-        "id": 1,
-        "idUsuari": 1
-    },
-    {
-        "dataDevolucio": null,
-        "dataPrestec": "2025-01-13",
-        "idLlibre": 2,
-        "id": 5,
-        "idUsuari": 1
-    },
-    {
-        "dataDevolucio": null,
-        "dataPrestec": "2025-01-13",
-        "idLlibre": 1,
-        "id": 2,
-        "idUsuari": 1
-    },
-    {
         "dataDevolucio": "2025-01-20",
         "dataPrestec": "2025-01-13",
         "idLlibre": 3,
         "id": 3,
-        "idUsuari": 4
-    },
-    {
-        "dataDevolucio": "2025-05-30",
-        "dataPrestec": "2025-05-23",
-        "idLlibre": 1,
-        "id": 6,
         "idUsuari": 4
     },
     {
@@ -42,9 +14,9 @@
         "idUsuari": 4
     },
     {
-        "dataDevolucio": "2030-12-07",
-        "dataPrestec": "2030-11-30",
-        "idLlibre": 9,
+        "dataDevolucio": "2025-01-23",
+        "dataPrestec": "2025-01-16",
+        "idLlibre": 8,
         "id": 8,
         "idUsuari": 4
     },
@@ -61,5 +33,12 @@
         "idLlibre": 5,
         "id": 4,
         "idUsuari": 2
+    },
+    {
+        "dataDevolucio": "2025-01-23",
+        "dataPrestec": "2025-01-16",
+        "idLlibre": 8,
+        "id": 8,
+        "idUsuari": 4
     }
 ]

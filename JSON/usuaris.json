@@ -30,9 +30,21 @@
         "cognom": "Palotes"
     },
     {
-        "telefon": 654132798,
-        "id": 6,
-        "nom": "Rosa",
-        "cognom": "Melano"
+        "telefon": 951623874,
+        "id": 7,
+        "nom": "Raul",
+        "cognom": "Cobacho"
+    },
+    {
+        "telefon": 456798123,
+        "id": 8,
+        "nom": "Victor",
+        "cognom": "Oliva"
+    },
+    {
+        "telefon": 465125946,
+        "id": 9,
+        "nom": "Nazareno",
+        "cognom": "Ouviña "
     }
 ]

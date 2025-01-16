@@ -23,5 +23,15 @@
         "titol": "El camino de los reyes",
         "id": 5,
         "autor": "Brandon Sanderson"
+    },
+    {
+        "titol": "Harry Potter",
+        "id": 7,
+        "autor": "J K Rowling"
+    },
+    {
+        "titol": "Elantris",
+        "id": 6,
+        "autor": "Brandon Sanderson"
     }
 ]
