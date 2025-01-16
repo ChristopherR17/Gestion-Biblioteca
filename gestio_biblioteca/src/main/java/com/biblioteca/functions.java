@@ -189,8 +189,8 @@ public class functions {
         System.out.println("Filtros de prestecs");
         System.out.println("1. Todos");
         System.out.println("2. Préstecs d'un usuari");
-        System.out.println("3. Prérstecs actius"); 
-        System.out.println("4. Prérstecs finalitzats"); 
+        System.out.println("3. Préstecs actius"); 
+        System.out.println("4. Préstecs finalitzats"); 
         System.out.println("0. Tornar al menú prestecs ['menu']");
 
         String optionPrestecs = scanner.nextLine().toLowerCase();
