@@ -1358,7 +1358,7 @@ public class functions {
             
             System.out.println("===========================================================================================");
             System.out.println(
-            "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + " | " +
+            "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + "| " +
             "DATA PRESTEC" + " ".repeat(Math.max(0, maxDataPrestec - 12)) + " | " +
             "DATA DEVOLUCIO" + " ".repeat(Math.max(0, maxDataDevolucio - 14)) + " | " +
             "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLlibre - 10)) + " | " +
@@ -1420,7 +1420,7 @@ public class functions {
             //Encabezado
             System.out.println("=".repeat(maxId + maxDataPrestec + maxIdLlibre + maxIdUsuari + 15));
             System.out.println(
-                "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + " | " +
+                "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + "| " +
                 "DATA PRESTEC" + " ".repeat(Math.max(0, maxDataPrestec - 12)) + " | " +
                 "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLlibre - 9)) + " | " +
                 "ID USUARI"
