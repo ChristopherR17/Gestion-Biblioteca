@@ -1443,6 +1443,68 @@ public class functions {
         }
     }
 
+    public static void filterPrestecActius (Scanner scanner) {
+        String filePath = "JSON/prestecs.json";
+    
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONArray listaPrestecs = new JSONArray(content);
+    
+            int maxId = Math.max(2, "ID PRESTEC".length());
+            int maxDataPrestec = Math.max(10, "DATA PRESTEC".length());
+            int maxIdLlibre = Math.max(8, "ID LLIBRE".length());
+            int maxIdUsuari = Math.max(8, "ID USUARI".length());
+            boolean findedPrestecs = false;
+    
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+    
+                if (prestec.isNull("dataDevolucio")) {
+                    String dataPrestec = prestec.getString("dataPrestec");
+                    int idLlibre = prestec.getInt("idLlibre");
+                    int idUsuari = prestec.getInt("idUsuari");
+                    findedPrestecs = true;
+    
+                    maxId = Math.max(maxId, String.valueOf(prestec.getInt("id")).length());
+                    maxDataPrestec = Math.max(maxDataPrestec, dataPrestec.length());
+                    maxIdLlibre = Math.max(maxIdLlibre, String.valueOf(idLlibre).length());
+                    maxIdUsuari = Math.max(maxIdUsuari, String.valueOf(idUsuari).length());
+                }
+            }
+    
+            //Encabezado
+            System.out.println("=".repeat(maxId + maxDataPrestec + maxIdLlibre + maxIdUsuari + 15));
+            System.out.println(
+                "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + "| " +
+                "DATA PRESTEC" + " ".repeat(Math.max(0, maxDataPrestec - 12)) + " | " +
+                "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLlibre - 9)) + " | " +
+                "ID USUARI"
+            );
+            System.out.println("-".repeat(maxId + maxDataPrestec + maxIdLlibre + maxIdUsuari + 15));
+    
+            //Columnas
+            for (int i = 0; i < listaPrestecs.length(); i++) {
+                JSONObject prestec = listaPrestecs.getJSONObject(i);
+    
+                if (prestec.isNull("dataDevolucio")) {
+                    int id = prestec.getInt("id");
+                    String dataPrestec = prestec.getString("dataPrestec");
+                    int idLlibre = prestec.getInt("idLlibre");
+                    int idUsuari = prestec.getInt("idUsuari");
+    
+                    System.out.printf("%-" + maxId + "d | %-" + maxDataPrestec + "s | %-" + maxIdLlibre + "d | %-" + maxIdUsuari + "d\n", id, dataPrestec, idLlibre, idUsuari);
+                }
+            }
+    
+            if (!findedPrestecs) {
+                System.out.println("No se han encontrado prestamos finalizados");
+            }
+    
+        } catch (Exception e) {
+            System.out.println("Error al filtrar prestamos finalizados: " + e.getMessage());
+        }
+    }
+
     public static void filterPrestecTerminados (Scanner scanner) {
         String filePath = "JSON/prestecs.json";
     
@@ -1506,69 +1568,4 @@ public class functions {
             System.out.println("Error al filtrar prestamos activos: " + e.getMessage());
         }
     }
-    
-    public static void filterPrestecActius (Scanner scanner) {
-        String filePath = "JSON/prestecs.json";
-    
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(filePath)));
-            JSONArray listaPrestecs = new JSONArray(content);
-    
-            int maxId = Math.max(2, "ID PRESTEC".length());
-            int maxDataPrestec = Math.max(10, "DATA PRESTEC".length());
-            int maxIdLlibre = Math.max(8, "ID LLIBRE".length());
-            int maxIdUsuari = Math.max(8, "ID USUARI".length());
-            boolean findedPrestecs = false;
-    
-            for (int i = 0; i < listaPrestecs.length(); i++) {
-                JSONObject prestec = listaPrestecs.getJSONObject(i);
-    
-                if (prestec.isNull("dataDevolucio")) {
-                    String dataPrestec = prestec.getString("dataPrestec");
-                    int idLlibre = prestec.getInt("idLlibre");
-                    int idUsuari = prestec.getInt("idUsuari");
-                    findedPrestecs = true;
-    
-                    maxId = Math.max(maxId, String.valueOf(prestec.getInt("id")).length());
-                    maxDataPrestec = Math.max(maxDataPrestec, dataPrestec.length());
-                    maxIdLlibre = Math.max(maxIdLlibre, String.valueOf(idLlibre).length());
-                    maxIdUsuari = Math.max(maxIdUsuari, String.valueOf(idUsuari).length());
-                }
-            }
-    
-            //Encabezado
-            System.out.println("=".repeat(maxId + maxDataPrestec + maxIdLlibre + maxIdUsuari + 15));
-            System.out.println(
-                "ID PRESTEC" + " ".repeat(Math.max(0, maxId - 9)) + "| " +
-                "DATA PRESTEC" + " ".repeat(Math.max(0, maxDataPrestec - 12)) + " | " +
-                "ID LLIBRE" + " ".repeat(Math.max(0, maxIdLlibre - 9)) + " | " +
-                "ID USUARI"
-            );
-            System.out.println("-".repeat(maxId + maxDataPrestec + maxIdLlibre + maxIdUsuari + 15));
-    
-            //Columnas
-            for (int i = 0; i < listaPrestecs.length(); i++) {
-                JSONObject prestec = listaPrestecs.getJSONObject(i);
-    
-                if (prestec.isNull("dataDevolucio")) {
-                    int id = prestec.getInt("id");
-                    String dataPrestec = prestec.getString("dataPrestec");
-                    int idLlibre = prestec.getInt("idLlibre");
-                    int idUsuari = prestec.getInt("idUsuari");
-    
-                    System.out.printf("%-" + maxId + "d | %-" + maxDataPrestec + "s | %-" + maxIdLlibre + "d | %-" + maxIdUsuari + "d\n", id, dataPrestec, idLlibre, idUsuari);
-                }
-            }
-    
-            if (!findedPrestecs) {
-                System.out.println("No se han encontrado prestamos finalizados");
-            }
-    
-        } catch (Exception e) {
-            System.out.println("Error al filtrar prestamos finalizados: " + e.getMessage());
-        }
-    }
-    
-    
-    
 }
