@@ -1310,66 +1310,54 @@ public class functions {
     }
 
 
-    public static void filterPrestecs (Scanner scanner){
+    public static void filterPrestecs(Scanner scanner) {
         /*
-         * Función que se utiliza para filtrar todos los prestámos
+         * Función que se utiliza para filtrar todos los préstamos
          * Información que se verá en el filtrado
-         * 1 --> Id del usuario al que se le realiza el prestamos
+         * 1 --> Id del usuario al que se le realiza el préstamo
          * 2 --> Id del libro prestado 
-         * 3 --> Fecha en la que se realiza el prestámo
+         * 3 --> Fecha en la que se realiza el préstamo
          * @param scanner: el input del usuario en el menú
          */
-
+    
         String filePath = "JSON/prestecs.json";
-
+    
         try {
-            
             String content = new String(Files.readAllBytes(Paths.get(filePath)));
             JSONArray listaPrestecs = new JSONArray(content);
-
-            int maxId = 2;
-            int maxDataPrestec = 10;
-            int maxDataDevolucio = 10;
-
-            //Este for es para el formato del encabezado
-            for (int i = 0; i < listaPrestecs.length(); i++) {
-                
-                JSONObject prestec = listaPrestecs.getJSONObject(i);
-                String dataPrestec = prestec.getString("dataPrestec");
-                String dataDevolucio = "null";
-
-                if (!prestec.isNull("dataDevolucio")){
-                    dataDevolucio = prestec.getString("dataDevolucio");
-                }
-
-                maxDataPrestec = Math.max(maxDataPrestec, dataPrestec.length());
-                maxDataDevolucio = Math.max(maxDataDevolucio, dataDevolucio.length());
-            }
-
+    
+            // Ancho fijo para cada columna
+            int maxId = 4;
+            int maxIdUsuari = 8;
+            int maxIdLlibre = 8;
+            int maxDataPrestec = 12;
+            int maxDataDevolucio = 14;
+    
+            // Encabezado
             System.out.println("==========================================================================");
-            System.out.println("Id" + " ".repeat(maxId - 2) + "| Data Prestec" + " ".repeat(maxDataPrestec - 10) + "| Data Devolucio"); //Encabezado
-            System.out.println("-".repeat(maxId) + "---" +"-".repeat(maxDataPrestec) + "---" +"-".repeat(maxDataDevolucio)); //Separadores
-
-            //Este for es para el contenido del filtrado
+            System.out.printf("%-" + maxId + "s | %-" + maxIdUsuari + "s | %-" + maxIdLlibre + "s | %-" + maxDataPrestec + "s | %-" + maxDataDevolucio + "s\n",
+                              "Id", "IdUsuari", "IdLlibre", "Data Prestec", "Data Devolucio");
+            System.out.println("-".repeat(maxId) + " | " + "-".repeat(maxIdUsuari) + " | " + "-".repeat(maxIdLlibre) + " | " +
+                               "-".repeat(maxDataPrestec) + " | " + "-".repeat(maxDataDevolucio));
+    
+            // Contenido
             for (int i = 0; i < listaPrestecs.length(); i++) {
-
                 JSONObject prestec = listaPrestecs.getJSONObject(i);
                 int id = prestec.getInt("id");
+                int idUsuari = prestec.getInt("idUsuari");
+                int idLlibre = prestec.getInt("idLlibre");
                 String dataPrestec = prestec.getString("dataPrestec");
-                String dataDevolucio = "null";
-
-                if (!prestec.isNull("dataDevolucio")) {
-                    dataDevolucio = prestec.getString("dataDevolucio");
-                }
+                String dataDevolucio = prestec.isNull("dataDevolucio") ? "null" : prestec.getString("dataDevolucio");
     
-                System.out.printf("%-" + maxId + "d | %s | %-" + maxDataDevolucio + "s\n", id, dataPrestec, dataDevolucio);
+                System.out.printf("%-" + maxId + "d | %-" + maxIdUsuari + "d | %-" + maxIdLlibre + "d | %-" + maxDataPrestec + "s | %-" + maxDataDevolucio + "s\n",
+                                  id, idUsuari, idLlibre, dataPrestec, dataDevolucio);
             }
-
+    
         } catch (Exception e) {
-            System.out.println("Error al filtrar los prestamos: "+ e.getMessage());
+            System.out.println("Error al filtrar los préstamos: " + e.getMessage());
         }
-    }
-
+    }    
+    
     public static void filterPrestecsByUser(Scanner scanner) {
         /*
          * Esta función muestra todos los préstamos de un usuario específico.
@@ -1455,7 +1443,7 @@ public class functions {
         }
     }
 
-    public static void filterPrestecActius (Scanner scanner) {
+    public static void filterPrestecTerminados (Scanner scanner) {
         String filePath = "JSON/prestecs.json";
     
         try {
@@ -1519,7 +1507,7 @@ public class functions {
         }
     }
     
-    public static void filterPrestecTerminados(Scanner scanner) {
+    public static void filterPrestecActius (Scanner scanner) {
         String filePath = "JSON/prestecs.json";
     
         try {
