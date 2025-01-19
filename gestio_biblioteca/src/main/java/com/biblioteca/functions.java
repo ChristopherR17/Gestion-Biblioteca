@@ -1253,7 +1253,7 @@ public class functions {
 
             if (prestecEncontrado) {
                 Files.write(Paths.get(prestecsPath), prestecsArray.toString(4).getBytes());
-                System.out.println("Préstec eliminat correctament.");
+                System.out.println("Préstec "+idPrestec+" eliminat correctament.");
             } else {
                 System.out.println("Error: No s'ha trobat cap préstec amb aquesta ID.");
             }
